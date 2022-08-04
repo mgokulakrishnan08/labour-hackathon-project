@@ -2,24 +2,26 @@
 <html lang="en">
 <head>
 
-	<title>Login </title>
+	<title>Institution Login Portal - Ministry Of Labour And Welfare</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	{% load static %}
 <!--===============================================================================================-->	
-	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+	<link rel="icon" type="image/png" href="{% static 'images/icons/favicon.ico' %}"/>
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/animate/animate.css' %}">
 <!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/css-hamburgers/hamburgers.min.css' %}">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/select2/select2.min.css' %}">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="css/util.css">
-	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/util.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
 <!--===============================================================================================-->
 </head>
 <body>
@@ -31,9 +33,9 @@
 			<div class="wrap-login100">
 				
 				<form class="login100-form validate-form">
-					<div class="login100-form-title">
-						<h3>E-RUSUME PROJECT</h3>
-					</div>
+					<span class="login100-form-title">
+						<h3>DIGITAL RUSUME PROJECT</h3>
+					</span>
 					<span class="login100-form-title">
 							Organisation / Institution Login
 					</span>
@@ -45,6 +47,8 @@
 							<i class="fa fa-at" aria-hidden="true"></i>
 						</span>
 					</div>
+
+
 
 					<div class="wrap-input100 validate-input" data-validate = "Password is required">
 						<input class="input100" type="password" name="pass" placeholder="Password">
@@ -65,13 +69,13 @@
 							Forgot
 						</span>
 						<a class="txt2" href="#">
-							Username / Password?
+							Password?
 						</a>
 					</div>
 
 					<div class="text-center p-t-136">
 						<a class="txt2" href="#">
-							Create your Account
+							regiter your institution/organisation
 							<i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
 						</a>
 					</div>

@@ -58,10 +58,11 @@ a:focus {
 
 a:hover {
 	text-decoration: none;
-  color: #57b846;
+  color: blue;
 }
 
 /*---------------------------------------------*/
+
 h1,h2,h3,h4,h5,h6 {
 	margin: 0px;
 }
@@ -188,7 +189,7 @@ iframe {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  padding: 177px 130px 33px 95px;
+  padding: 150px 140px 33px 95px;
 }
 
 /*------------------------------------------------------------------
@@ -214,7 +215,7 @@ iframe {
   color: #333333;
   line-height: 1.2;
   text-align: center;
-
+  white-space: nowrap;
   width: 100%;
   display: block;
   padding-bottom: 54px;
@@ -304,7 +305,7 @@ iframe {
 }
 
 .input100:focus + .focus-input100 + .symbol-input100 {
-  color: #57b846;
+  color: blue;
   padding-left: 28px;
 }
 
