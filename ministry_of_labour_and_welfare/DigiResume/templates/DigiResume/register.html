@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+<title></title>
+
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/layout.css' %}">
+</head>
+<body>
+
+
+<header >
+    <div>
+        <img src="{% static 'image/ministry-of-labour.png' %}" alt="" class="float-left header-img">
+        <img src="{% static 'image/national-career-service.png' %}" alt="" class="float-right header-img">
+    </div>
+    <nav class="navbar navbar-expand-lg navigation float-bottom">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav ">
+            <a class="nav-item nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link" href="#">Register</a>
+            <a class="nav-item nav-link" href="#">Add course</a>
+            <a class="nav-item nav-link" href="#">Add Work</a>
+            <a class="nav-item nav-link active" href="#">History</a>
+            <a class="nav-item nav-link" href="#">Activity</a>
+          </div>
+        </div>
+      </nav>
+</header>
+
+
+
+
+
+
+   <footer>
+   <small>&copy; Copyright 2022 Minstry Of Labour And Welfare.All Rights Reserved</small> 
+   </footer>
+
+</body>
+</html>

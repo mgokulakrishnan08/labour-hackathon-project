@@ -10,7 +10,7 @@ class Person(models.Model):
     uid=models.CharField(max_length=16,primary_key=True)
     name=models.CharField(max_length=50)
     aadhar=models.IntegerField()
-    photo=models.ImageField(upload_to=f'photos/{name}')
+    photo=models.ImageField(upload_to=f'photos/{uid}')
     dob=models.DateField()
     gender=models.CharField(max_length=6)
     street=models.CharField(max_length=50)
@@ -22,6 +22,7 @@ class Person(models.Model):
     nationality=models.CharField(max_length=10)
 #-----------------------------------------------------------------------#
 #institution tables
+
 class Institution(models.Model):
     inst_code=models.CharField(max_length=9,primary_key=True)
     password=models.CharField(max_length=16)
@@ -56,6 +57,7 @@ class InstitutionHistory(models.Model):
 
 #-----------------------------------------------------------------------#
 #oraganisation tables
+
 class Organisation(models.Model):
     org_code=models.CharField(max_length=9,primary_key=True)
     password=models.CharField(max_length=16)
@@ -85,6 +87,7 @@ class OrganisationHistory(models.Model):
 
 #-----------------------------------------------------------------------#
 #seva stores for unorganised works
+
 class SevaStore(models.Model):
     seva_code=models.CharField(max_length=9,primary_key=True)
     password=models.CharField(max_length=16)
@@ -110,7 +113,6 @@ class SevaHistory(models.Model):
 
 
 #-----------------------------------------------------------------------#
-
 #person information
 
 class EducationInfo(models.Model):
