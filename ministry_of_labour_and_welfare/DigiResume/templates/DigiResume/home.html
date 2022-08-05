@@ -22,9 +22,14 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav ">
             <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+            {% if sector is 1 %}
             <a class="nav-item nav-link" href="#">Register</a>
             <a class="nav-item nav-link" href="#">Add course</a>
+            {% elif sector is not 3 %}
             <a class="nav-item nav-link" href="#">Add Work</a>
+            {% elif sector is 3 %}
+            <a class="nav-item nav-link" href="#">Add unorganised Work</a>
+            {% endif %}
             <a class="nav-item nav-link" href="#">History</a>
             <a class="nav-item nav-link" href="#">Activity</a>
           </div>
@@ -34,7 +39,7 @@
 
 
 
-
+{{sector}}
 
 
    <footer>
