@@ -4,11 +4,13 @@ from .views import *
 urlpatterns = [
     path('',index),
     path('login/',login),
-    path('home/',home),
-    path('register/',register),
-    path('add_course/',add_course),
-    path('add_work/',add_work),
-    path('history/',history),
-    path('activity/',activity),
-    path('view_details/',view_details)
+    path('<str:code>/home/',home),
+    path('<str:code>/register/',register),
+    path('<str:code>/add_course/',add_course),
+    path('<str:code>/add_work/',add_work),
+    path('<str:code>/history/',history),
+    path('<str:code>/activity/',activity),
+    path("<str:uid>/view_details/",view_details)
 ]
+
+    # path("<str:uid>/view_details/",view_details)

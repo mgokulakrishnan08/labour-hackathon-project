@@ -6,6 +6,12 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
 <link rel="stylesheet" href="{% static 'css/layout.css' %}">
+
+<style>
+  .table{
+    width:25%;    
+  }
+</style>
 </head>
 <body>
 
@@ -37,14 +43,62 @@
       </nav>
 </header>
 
+<div>
+{% if sector is 1 %}
+  <table class="table">
+          <tr>
+            <td>Institution Name: </td>
+            <td>{{x.inst_name}} </td>
+          </tr>
+          <tr>
+            <td>Owner Name: </td>
+            <td>{{x.owner_name}} </td>
+          </tr>
+
+              <!-- continue -->
+
+  </table>
+
+  {% elif sector is 2 %}
+
+  <table class="table">
+    <tr>
+      <td>Organisation Name: </td>
+      <td>{{x.inst_name}} </td>
+    </tr>
+    <tr>
+      <td>Owner Name: </td>
+      <td>{{x.owner_name}} </td>
+    </tr>
+
+        <!-- continue -->
+
+  </table>
 
 
-{{sector}}
+  {% elif sector is 3 %}
+
+  <table class="table">
+    <tr>
+      <td>Seva Store Name: </td>
+      <td>{{x.seva_name}} </td>
+    </tr>
+    <tr>
+      <td>Owner Name: </td>
+      <td>{{x.owner_name}} </td>
+    </tr>
+
+        <!-- continue -->
+
+  </table>
+
+  {% endif %}
+</div>
 
 
-   <footer>
-   <small>&copy; Copyright 2022 Minstry Of Labour And Welfare.All Rights Reserved</small> 
-   </footer>
+<footer>
+<small>&copy; Copyright 2022 Minstry Of Labour And Welfare.All Rights Reserved</small> 
+</footer>
 
 </body>
 </html>

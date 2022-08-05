@@ -26,6 +26,7 @@ class Person(models.Model):
 class Institution(models.Model):
     inst_code=models.CharField(max_length=9,primary_key=True)
     password=models.CharField(max_length=16)
+    inst_name=models.CharField(max_length=50)
     owner_name=models.CharField(max_length=50)
     owner_uid=models.CharField(max_length=16)
     street=models.CharField(max_length=20)
@@ -43,12 +44,9 @@ class RolesByInstitution(models.Model):
     inst_code=models.ForeignKey(Institution,on_delete=models.CASCADE)
     role_name=models.CharField(max_length=20)
 
-class InstitutionRequest(models.Model):
-    uid=models.ForeignKey(Person,on_delete=models.CASCADE)
-    inst_code=models.ForeignKey(Institution,on_delete=models.CASCADE)
-    status=models.CharField(max_length=7)
 
-class InstitutionHistory(models.Model):
+
+class InstitutionActivity(models.Model):
     date_time=models.DateTimeField(auto_now=True)
     uid=models.ForeignKey(Person,on_delete=models.CASCADE)
     inst_code=models.ForeignKey(Institution,on_delete=models.CASCADE)
@@ -61,6 +59,7 @@ class InstitutionHistory(models.Model):
 class Organisation(models.Model):
     org_code=models.CharField(max_length=9,primary_key=True)
     password=models.CharField(max_length=16)
+    org_name=models.CharField(max_length=50)
     owner_name=models.CharField(max_length=50)
     owner_uid=models.CharField(max_length=16)
     street=models.CharField(max_length=20)
@@ -74,12 +73,9 @@ class RolesByOrganisation(models.Model):
     org_code=models.ForeignKey(Organisation,on_delete=models.CASCADE)
     role_name=models.CharField(max_length=20)
 
-class OrganisationRequest(models.Model):
-    uid=models.ForeignKey(Person,on_delete=models.CASCADE)
-    org_code=models.ForeignKey(Organisation,on_delete=models.CASCADE)
-    status=models.CharField(max_length=7)
 
-class OrganisationHistory(models.Model):
+
+class OrganisationActivity(models.Model):
     date_time=models.DateTimeField(auto_now=True)
     uid=models.ForeignKey(Person,on_delete=models.CASCADE)
     org_code=models.ForeignKey(Organisation,on_delete=models.CASCADE)
@@ -91,6 +87,7 @@ class OrganisationHistory(models.Model):
 class SevaStore(models.Model):
     seva_code=models.CharField(max_length=9,primary_key=True)
     password=models.CharField(max_length=16)
+    seva_name=models.CharField(max_length=50)
     owner_name=models.CharField(max_length=30)
     owner_uid=models.CharField(max_length=16)
     street=models.CharField(max_length=20)
@@ -100,12 +97,9 @@ class SevaStore(models.Model):
     email=models.CharField(max_length=20)
     mobile=models.IntegerField()
 
-class SevaRequest(models.Model):
-    uid=models.ForeignKey(Person ,on_delete=models.CASCADE)
-    seva_code=models.ForeignKey(SevaStore ,on_delete=models.CASCADE)
-    status=models.CharField(max_length=7)
 
-class SevaHistory(models.Model):
+
+class SevaActivity(models.Model):
     date=models.DateField(auto_now=True)
     uid=models.ForeignKey(Person,on_delete=models.CASCADE)
     seva_code=models.ForeignKey(SevaStore ,on_delete=models.CASCADE)
