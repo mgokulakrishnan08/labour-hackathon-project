@@ -1,3 +1,4 @@
+{% load crispy_forms_tags %}
 <!doctype html>
 <html>
 <head>
@@ -22,16 +23,32 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav ">
             <a class="nav-item nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            <a class="nav-item nav-link" href="#">Register</a>
-            <a class="nav-item nav-link" href="#">Add course</a>
-            <a class="nav-item nav-link active" href="#">Add Work</a>
-            <a class="nav-item nav-link" href="#">History</a>
-            <a class="nav-item nav-link" href="#">Activity</a>
+            {% if sector is 1 %}
+            <a class="nav-item nav-link" href="/{{code}}/register">Register</a>
+            <a class="nav-item nav-link" href="/{{code}}/add_course">Add course</a>
+            {% elif sector is not 3 %}
+            <a class="nav-item nav-link active" href="/{{code}}/add_work">Add Work</a>
+            {% endif %}
+            <a class="nav-item nav-link" href="/{{code}}/activity">Activity</a>
           </div>
         </div>
       </nav>
 </header>
 
+
+<div class="container d-flex h-100">
+  <div class="row justify-content-center">
+    <form action="POST" class=""> 
+      {% csrf_token %}
+      {{form | crispy}}
+      <div class="btn btn-block">
+        <button class=" btn btn-primary" type="submit">
+          Register
+        </button>
+      </div>    
+    </form>
+  </div>
+</div>
 
 
 

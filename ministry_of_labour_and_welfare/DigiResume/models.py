@@ -10,7 +10,7 @@ class Person(models.Model):
     uid=models.CharField(max_length=16,primary_key=True)
     name=models.CharField(max_length=50)
     aadhar=models.IntegerField()
-    photo=models.ImageField(upload_to=f'photos/{uid}')
+    photo=models.ImageField(upload_to='person/')
     dob=models.DateField()
     gender=models.CharField(max_length=6)
     street=models.CharField(max_length=50)
@@ -136,5 +136,8 @@ class UnorganisedWorkInfo(models.Model):
     work_name=models.CharField(max_length=20)
 
 #-----------------------------------------------------------------------#
+class resources(models.Model):
+    name=models.CharField(max_length=10)
+    img=models.ImageField(upload_to='resources/')
 
 

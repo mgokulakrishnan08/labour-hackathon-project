@@ -1,7 +1,16 @@
+import base64
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.template import loader
 from .models import *
+from PIL import Image
+from django.core.files.storage import default_storage
+from .utilities import *
+from io import BytesIO
+from .forms import *
+
+
+# from .utilities import *
 
 # Create your views here.
 
@@ -22,10 +31,10 @@ def login(request):
             x=Institution.objects.get(inst_code=id).password
         elif 'ORG' in id:
             sector=2
-            x=Institution.objects.get(org_code=id).password
+            x=Organisation.objects.get(org_code=id).password
         elif 'SEV' in id:
             sector=3
-            x=Institution.objects.get(sev_code=id).password
+            x=SevaStore.objects.get(seva_code=id).password
         if password==x:
             return redirect(f'/{id}/home/')
         else:
@@ -38,25 +47,58 @@ def home(request,code):
     elif sector is 2:
         x=Organisation.objects.get(org_code=code)        
     elif sector is 3:
-        x=SevaStore.objects.get(sev_code=code)
-    return render(request,'DigiResume/home.html',{'sector':sector,'x':x})
+        x=SevaStore.objects.get(seva_code=code)
+    return render(request,'DigiResume/home.html',{'sector':sector,'code':code,'x':x,})
 
 def register(request,code):
-    return render(request,'DigiResume/register.html')
+    uid=generateUID()
+    name='selva geetha'
+    dob='21-02-2002'
+    gender='female'
+    info=f'Name:{name}\nDOB:{dob}\nGender:{gender}'
+    card=generateCard(uid,info)
+    # card.show()
+   
+    if request.method == 'POST':
+            form = RegisterForm(request.POST)
+            if form.is_valid():
+            
+                return redirect('/thanks/')
+    else:
+        form = RegisterForm()
+    return render(request,'DigiResume/register.html',{'form':form,'sector':sector,'code':code})
 
 def add_course(request,code):
-    return render(request,'DigiResume/add_course.html')
+    if request.method == 'POST':
+            form = AddCourseForm(request.POST)
+            if form.is_valid():
+            
+                return redirect('/thanks/')
+    else:
+        form = AddCourseForm()  
+    return render(request,'DigiResume/add_course.html',{'code':code,'sector':sector,'form':form})
 
 def add_work(request,code):
-    return render(request,'DigiResume/add_work.html')
+    if sector==2:
+        if request.method == 'POST':
+            form = AddWorkForm(request.POST)
+            if form.is_valid():
+                return redirect('/thanks/')
+        else:
+            form = AddWorkForm()
+    elif sector==3:
+        if request.method == 'POST':
+            form = AddUnorganisedWorkForm(request.POST)
+            if form.is_valid():
+                return redirect('/thanks/')
+        else:
+            form = AddUnorganisedWorkForm()            
+    return render(request,'DigiResume/add_work.html',{'code':code,'form':form})
 
-def history(request,code):
-    return render(request,'DigiResume/history.html')
 
 def activity(request,code):
-    return render(request,'DigiResume/activity.html')
+    return render(request,'DigiResume/activity.html',{'code':code})
 
 def view_details(request,uid):
-    print(uid)
-    # x=Person.objects.get(uid=uid)
-    return render(request,'DigiResume/view_details.html')
+    x=Person.objects.get(uid=uid)
+    return render(request,'DigiResume/view_details.html',{'x':x})

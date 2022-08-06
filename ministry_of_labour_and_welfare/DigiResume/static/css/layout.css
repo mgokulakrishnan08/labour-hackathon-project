@@ -21,13 +21,14 @@
         background-color: #000099;
         border-radius: 5px;
     }
+    
     footer 
     {
       text-align: center;
       padding: 5px;
       background-image: linear-gradient(to right,#000046,#1CB5E0);
       color: white;
-      position: absolute;
+      position: relative;
       bottom: 0;
       width: 100%;
     }

@@ -6,6 +6,13 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
 <link rel="stylesheet" href="{% static 'css/layout.css' %}">
+<style>
+  .table{
+    width:50%;    
+  }
+
+
+</style>
 </head>
 <body>
 
@@ -21,23 +28,42 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav ">
-            <a class="nav-item nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            <a class="nav-item nav-link" href="#">Register</a>
-            <a class="nav-item nav-link" href="#">Add course</a>
-            <a class="nav-item nav-link" href="#">Add Work</a>
-            <a class="nav-item nav-link" href="#">History</a>
-            <a class="nav-item nav-link" href="#">Activity</a>
+            <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+            {% if sector is 1 %}
+            <a class="nav-item nav-link" href="/{{code}}/register">Register</a>
+            <a class="nav-item nav-link" href="/{{code}}/add_course">Add course</a>
+            {% elif sector is not 3 %}
+            <a class="nav-item nav-link" href="/{{code}}/add_work">Add Work</a>
+            {% endif %}
+            <a class="nav-item nav-link" href="/{{code}}/activity">Activity</a>
           </div>
         </div>
       </nav>
 </header>
+<br><br>
+<div class="container">
+  <div class="float-right img-thumbnail ">
+<img src="{{x.photo.url}}" alt="f'{{x.name}} image'" width="150px" height="150px">
+</div>
 
+<table class="table">
+  
+  <tr>
+    <td>Name: </td>
+    <td>{{x.name}}    </td>
+  </tr>
+  <tr>
+    <td>Aadhar Number: </td>
+    <td>{{x.aadhar}} </td>
+  </tr>
 
+      <!-- continue -->
 
+</table>
 
+</div>
 
-
-   <footer>
+   <footer class="page-footer page-responsive text-white font-small">
    <small>&copy; Copyright 2022 Minstry Of Labour And Welfare.All Rights Reserved</small> 
    </footer>
 

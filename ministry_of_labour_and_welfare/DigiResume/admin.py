@@ -16,4 +16,5 @@ admin.site.register(SevaActivity)
 admin.site.register(EducationInfo)
 admin.site.register(WorkInfoByOrganisation)
 admin.site.register(WorkInfoByInstitution)
-admin.site.register(UnorganisedWorkInfo)
+
+admin.site.register(resources)
