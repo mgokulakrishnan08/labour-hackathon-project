@@ -1,34 +1,56 @@
-from .models import Person
-from django import forms 
+from .models import Person,EducationInfo,WorkInfoByOrganisation,WorkInfoByInstitution,UnorganisedWorkInfo,courses
+from django import forms
+
 
 class RegisterForm(forms.ModelForm):
     class Meta:
         model = Person
-        fields=['name','aadhar','photo','dob','gender','street','district','state','pincode','email','mobile','nationality']
+        fields=['name','aadhar','photo','dob','gender','district','state','pincode','email','mobile','nationality']
+        widgets = {
+            'gender':forms.RadioSelect(choices=[
+                ('Male','Male'),
+                ('Female','Female'),
+                ('Other','Other')
+            ])
+        }
 
-class AddCourseForm(forms.Form):
+
+
+class AddCourseForm(forms.ModelForm):
+    uid=forms.CharField(max_length=16)
+    choices=[
+        ('class 10','class 10'),
+        ]
+    class Meta:
+        model = EducationInfo
+        exclude = ['inst_code']
+
+
+        
+
+
+
+class AddWorkOrganisationForm(forms.ModelForm):
     choices=[
         ('class 10','class 10'),
         ('class 12','class 12')
         ]
-    uid=forms.CharField(max_length=16)
-    course_name=forms.ChoiceField(choices=choices,widget=forms.RadioSelect)
-    completion_date=forms.DateField()
-    grade=forms.IntegerField()
+    class Meta:
+        model = WorkInfoByOrganisation
+        exclude = ['org_code']
 
 
-
-class AddWorkForm(forms.Form):
+class AddWorkInstitutionForm(forms.ModelForm):
     choices=[
         ('class 10','class 10'),
         ('class 12','class 12')
         ]
-    uid=forms.CharField(max_length=16)
-    role=forms.ChoiceField(choices=choices,widget=forms.RadioSelect)
-    join_date=forms.DateField()
-    resign_date=forms.IntegerField()
+    class Meta:
+        model = WorkInfoByInstitution
+        exclude = ['inst_code']
 
-class AddUnorganisedWorkForm(forms.Form):
-    uid=forms.CharField(max_length=16)
-    work_name=forms.CharField(max_length=16)
+class AddUnorganisedWorkForm(forms.ModelForm):
+    class Meta:
+        model = UnorganisedWorkInfo
+        exclude = ['seva_code']
         

@@ -14,19 +14,19 @@ def generateUID():
 def generateQR(uid):
     return qr.make(uid)
 
-def generateCard(uid,info):
+def generateCard(uid,info,photo):
     uid_temp=' '.join(uid[i:i+4]for i in range(0,len(uid),4))
     qrimg=generateQR(uid)
     img= Image.open(resources.objects.get(pk=1).img)
-    photo= Image.open(resources.objects.get(pk=2).img)
-    resize_photo=photo.resize((round(photo.size[0]*0.30),round(photo.size[0]*0.30)))
+    photo= Image.open(photo)
+    resize_photo=photo.resize((300,300))
     I1=ImageDraw.Draw(img)
-    uid_font=ImageFont.truetype('arial.ttf',65)
-    info_font=ImageFont.truetype('arial.ttf',45)
-    I1.text((270,660),uid_temp,font=uid_font,fill=(0,0,0))
-    I1.text((380,400),info,font=info_font,fill=(0,0,0))
-    img.paste(qrimg,(910,380))
-    img.paste(resize_photo,(90,400))
+    uid_font=ImageFont.truetype('arial.ttf',85)
+    info_font=ImageFont.truetype('arial.ttf',100)
+    I1.text((1400,1900),uid_temp,font=uid_font,fill=(0,0,0))
+    I1.text((1000,1200),info,font=info_font,fill=(0,0,0))
+    img.paste(qrimg.resize((600,600)),(2700,1200))
+    img.paste(resize_photo, (200,1200))
     return img
 
 

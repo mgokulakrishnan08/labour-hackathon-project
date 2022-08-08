@@ -1,16 +1,9 @@
 import base64
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
-from django.template import loader
 from .models import *
-from PIL import Image
-from django.core.files.storage import default_storage
 from .utilities import *
-from io import BytesIO
 from .forms import *
-
-
-# from .utilities import *
 
 # Create your views here.
 
@@ -19,6 +12,8 @@ def index(request):
         uid=request.GET.dict()['id'].upper()
         return redirect(f'/{uid}/view_details')
     return render(request,'DigiResume/index.html')
+
+
 
 def login(request):
     flag=True
@@ -41,6 +36,8 @@ def login(request):
             flag=False
     return render(request,'DigiResume/login.html',{'flag':flag})
 
+
+
 def home(request,code):
     if sector is 1:
         x=Institution.objects.get(inst_code=code)
@@ -48,57 +45,129 @@ def home(request,code):
         x=Organisation.objects.get(org_code=code)        
     elif sector is 3:
         x=SevaStore.objects.get(seva_code=code)
-    return render(request,'DigiResume/home.html',{'sector':sector,'code':code,'x':x,})
+    return render(request,'DigiResume/home.html',{'sector':sector,'code':code,'x':x})
+
+
 
 def register(request,code):
     uid=generateUID()
-    name='selva geetha'
-    dob='21-02-2002'
-    gender='female'
-    info=f'Name:{name}\nDOB:{dob}\nGender:{gender}'
-    card=generateCard(uid,info)
-    # card.show()
-   
+    if uid in Person.objects.values_list('uid',flat=True):
+        return register(request,code)
+
     if request.method == 'POST':
-            form = RegisterForm(request.POST)
+            form = RegisterForm(request.POST, request.FILES)
             if form.is_valid():
-            
-                return redirect('/thanks/')
+                obj=form.save(commit=False)
+                obj.uid=uid
+                obj.save()
+                #card gen
+                p_obj = Person.objects.get(uid = uid)
+                name= p_obj.name
+                dob= p_obj.dob
+                gender= p_obj.gender
+                photo = p_obj.photo
+                info=f'Name:{name}\n\nDOB:{dob}\n\nGender:{gender}'
+                card=generateCard(uid,info,photo)
+                card.show()
+                #updating activity table
+                InstitutionActivity(uid=Person(uid = uid), inst_code = Institution(inst_code=code), action = f'User resistered {uid}').save()
+                return HttpResponse(f'User resistered {uid}')
     else:
         form = RegisterForm()
     return render(request,'DigiResume/register.html',{'form':form,'sector':sector,'code':code})
+
+
 
 def add_course(request,code):
     if request.method == 'POST':
             form = AddCourseForm(request.POST)
             if form.is_valid():
-            
-                return redirect('/thanks/')
+                obj = EducationInfo()
+                uid = form.cleaned_data['uid']
+                print(type(Person(uid=uid)))
+                obj.uid = Person(uid=uid)
+                obj.inst_code = Institution(inst_code=code)
+                course_name = form.cleaned_data['course_name']
+                obj.course_name = course_name
+                obj.grade = form.cleaned_data['grade']
+                obj.completion_date = form.cleaned_data['completion_date']
+                obj.save()
+                InstitutionActivity(uid=Person(uid = uid), inst_code = Institution(inst_code=code), action = f'{course_name} Course Added for {uid}').save()
+                return HttpResponse(f'{course_name} Course Added for {uid}')
+
+
     else:
         form = AddCourseForm()  
     return render(request,'DigiResume/add_course.html',{'code':code,'sector':sector,'form':form})
 
+
+
 def add_work(request,code):
-    if sector==2:
+    if sector==1:
         if request.method == 'POST':
-            form = AddWorkForm(request.POST)
+            form = AddWorkInstitutionForm(request.POST)
             if form.is_valid():
-                return redirect('/thanks/')
+                obj = WorkInfoByInstitution()
+                uid = form.cleaned_data['uid']
+                obj.uid = Person(uid = uid)
+                obj.inst_code = Institution(inst_code=code)
+                role = form.cleaned_data['role']
+                obj.role = role
+                obj.join_date = form.cleaned_data['join_date']
+                obj.resign_date = form.cleaned_data['resign_date']
+                obj.save()
+                InstitutionActivity(uid=Person(uid = Person(uid=uid)), inst_code = Institution(inst_code=code), action = f'{role} Course Added for {uid}').save()
+                return HttpResponse(f'{role} Course Added for {uid}')
+
+
         else:
-            form = AddWorkForm()
+            form = AddWorkInstitutionForm()
+            
+    elif sector==2:
+        if request.method == 'POST':
+            form = AddWorkOrganisationForm(request.POST)
+            if form.is_valid():
+                obj = WorkInfoByOrganisation()
+                uid = form.cleaned_data['uid']
+                obj.uid = Person(uid = uid)
+                obj.org_code = Organisation(org_code=code)
+                role = form.cleaned_data['role']
+                obj.role = role
+                obj.join_date = form.cleaned_data['join_date']
+                obj.resign_date = form.cleaned_data['resign_date']
+                obj.save()
+                OrganisationActivity(uid=Person(uid = uid), org_code = Organisation(org_code=code), action = f'{role} Course Added for {uid}').save()
+                return HttpResponse(f'{role} Course Added for {uid}')
+   
+        else:
+            form = AddWorkOrganisationForm()
+
     elif sector==3:
         if request.method == 'POST':
             form = AddUnorganisedWorkForm(request.POST)
             if form.is_valid():
-                return redirect('/thanks/')
+                obj = UnorganisedWorkInfo()
+                uid = form.cleaned_data['uid']
+                obj.uid = Person(uid = uid)
+                obj.seva_code = SevaStore(seva_code=code)
+                work = form.cleaned_data['work_name']
+                obj.work_name = work
+                obj.save()
+                SevaActivity(uid=Person(uid = uid), seva_code = SevaStore(seva_code=code), action = f'{work} Course Added for {uid}').save()
+                return HttpResponse(f'{work} Course Added for {uid}')
         else:
             form = AddUnorganisedWorkForm()            
     return render(request,'DigiResume/add_work.html',{'code':code,'form':form})
 
 
+
+
 def activity(request,code):
     return render(request,'DigiResume/activity.html',{'code':code})
 
+
+
 def view_details(request,uid):
     x=Person.objects.get(uid=uid)
-    return render(request,'DigiResume/view_details.html',{'x':x})
+    y = EducationInfo.objects.get(uid=uid)
+    return render(request,'DigiResume/view_details.html',{'x':x,'y':y})

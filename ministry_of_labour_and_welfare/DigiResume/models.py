@@ -20,6 +20,10 @@ class Person(models.Model):
     email=models.CharField(max_length=30)
     mobile=models.IntegerField()
     nationality=models.CharField(max_length=10)
+
+
+    def __str__(self):
+        return str(self.uid)
 #-----------------------------------------------------------------------#
 #institution tables
 
@@ -35,6 +39,8 @@ class Institution(models.Model):
     pincode=models.IntegerField()
     email=models.CharField(max_length=30)
     mobile=models.IntegerField()
+
+
 
 class courses(models.Model):
     inst_code=models.ForeignKey(Institution,on_delete=models.CASCADE)
@@ -68,6 +74,9 @@ class Organisation(models.Model):
     pincode=models.IntegerField()
     email=models.CharField(max_length=30)
     mobile=models.IntegerField()
+
+    def __str__(self):
+        return self.org_code
 
 class RolesByOrganisation(models.Model):
     org_code=models.ForeignKey(Organisation,on_delete=models.CASCADE)
