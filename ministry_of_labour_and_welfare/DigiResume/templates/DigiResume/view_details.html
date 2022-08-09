@@ -11,7 +11,7 @@
     width:50%;    
   }
 
-
+ 
 </style>
 </head>
 <body>
@@ -23,7 +23,9 @@
         <img src="{% static 'image/national-career-service.png' %}" alt="" class="float-right header-img">
     </div>
     <nav class="navbar navbar-expand-lg navigation float-bottom">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <a class="nav-item nav-link" href="/{{code}}/register"></a>
+
+        <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
@@ -34,16 +36,23 @@
             <a class="nav-item nav-link" href="/{{code}}/add_course">Add course</a>
             {% endif %}
             <a class="nav-item nav-link" href="/{{code}}/add_work">Add Work</a>
+            <a class="nav-item nav-link" href="/{{code}}/add_resign">Add Resign</a>
             <a class="nav-item nav-link" href="/{{code}}/activity">Activity</a>
           </div>
-        </div>
+        </div> -->
       </nav>
 </header>
 <br><br>
+
 <div class="container">
-  <div class="float-right img-thumbnail ">
-<img src="{{x.photo.url}}" alt="f'{{x.name}} image'" width="150px" height="150px">
-</div>
+  <div class="container">
+    <div class="float-right img-thumbnail ">
+      <img src="{{x.photo.url}}" alt="f'{{x.name}} image'" width="150px" height="150px">
+      </div>
+  </div>
+
+<div class="container">
+  <h3>PERSONAL DETAILS:</h3>
 
 <table class="table">
   
@@ -94,11 +103,91 @@
 </table>
 </div>
 
-{% for i in y %}
-{{i.inst_code.inst_name}}
-{% endfor %} 
 
-   <footer class="page-footer page-responsive text-white font-small">
+<h3>EDUCATION INFO:</h3>
+
+  <table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+      <tr>
+        <th>instution code
+        </th>
+        <th>Course name</th>
+        <th>Completion date</th>
+        <th>Grade</th>
+      </tr>
+    </thead>
+  
+    <tr>
+      {% for i in y %}
+      <tr>
+        <td>{{i.inst_code}}</td>
+        <td>{{i.course_name}}</td>
+        <td>{{i.completion_date}}</td>
+        <td>{{i.grade}}</td>
+      </tr>
+    </tr>
+      {% endfor %}
+  
+  </table>
+  
+
+
+  <h3>WORK EXPERIENCE:</h3>
+
+<table class="table table-stripped table-bordered">
+  <thead class="thead-dark" >
+    <tr>
+      <th>Organisation code
+      </th>
+      <th>Role name</th>
+      <th>Join date</th>
+      <th>resign date</th>
+    </tr>
+  </thead>
+
+    {% for i in z %}
+    <tr>
+      <td>{{i.org_code.org_name}}</td>
+      <td>{{i.role}}</td>
+      <td>{{i.join_date}}</td>
+      {% if i.resign_date is None %}
+      <td class="text-success">currently Working</td>
+      {% else %}
+      <td>{{i.resign_date}}</td>
+      {% endif %}
+    </tr>
+    {% endfor %}
+    {% for i in a %}
+    <tr>
+      <td>{{i.inst_code.inst_name}}</td>
+      <td>{{i.role}}</td>
+      <td>{{i.join_date}}</td>
+      {% if i.resign_date is None %}
+      <td class="text-success">currently Working</td>
+      {% else %}
+      <td>{{i.resign_date}}</td>
+      {% endif %}
+    </tr>
+    {% endfor %}
+
+</table>
+
+
+{% if uw %}
+<h3>UNORGANISED WORK:</h3>
+<ul>
+  {% for i in uw %}
+  <li>{{i.work_name}}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+</div>
+
+<br><br><br><br>
+
+
+  <footer class="">
    <small>&copy; Copyright 2022 Minstry Of Labour And Welfare.All Rights Reserved</small> 
    </footer>
 

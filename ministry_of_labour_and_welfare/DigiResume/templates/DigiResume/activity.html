@@ -25,17 +25,42 @@
             {% if sector is 1 %}
             <a class="nav-item nav-link" href="/{{code}}/register">Register</a>
             <a class="nav-item nav-link" href="/{{code}}/add_course">Add course</a>
-            {% elif sector is not 3 %}
-            <a class="nav-item nav-link" href="/{{code}}/add_work">Add Work</a>
             {% endif %}
+            <a class="nav-item nav-link" href="/{{code}}/add_work">Add Work</a>
+            <a class="nav-item nav-link" href="/{{code}}/add_resign">Add Resign</a>
             <a class="nav-item nav-link active" href="/{{code}}/activity">Activity</a>
           </div>
         </div>
       </nav>
-</header>
+    </header>
 
+    <br> 
 
+<div class="container">
+  <table class="table table-stripped table-bordered">
+    <thead class="thead-dark" >
+      <tr>
+        <th>date time
+        </th>
+        <th>uid</th>
+        <th>action</th>
+      </tr>
+    </thead>
+  
 
+      {% for i in o %}
+      <tr>
+        <td>{{i.date_time}}</td>
+        <td>{{i.uid}}</td>
+        <td>{{i.action}}</td>
+      </tr>
+      {% endfor %}
+
+  
+  </table>
+  
+  
+  </div>
 
 
 

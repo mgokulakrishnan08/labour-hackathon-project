@@ -5,7 +5,7 @@ from PIL import ImageDraw
 from PIL import ImageFont
 import random as r
 import qrcode as qr
-from .models import resources
+from .models import resources,Person
 
 
 def generateUID():
@@ -14,7 +14,14 @@ def generateUID():
 def generateQR(uid):
     return qr.make(uid)
 
-def generateCard(uid,info,photo):
+def generateCard():
+    p_obj = Person.objects.get(uid = uid)
+    uid=p_obj.uid
+    name= p_obj.name
+    dob= p_obj.dob
+    gender= p_obj.gender
+    photo = p_obj.photo
+    info=f'Name:{name}\n\nDOB:{dob}\n\nGender:{gender}'
     uid_temp=' '.join(uid[i:i+4]for i in range(0,len(uid),4))
     qrimg=generateQR(uid)
     img= Image.open(resources.objects.get(pk=1).img)

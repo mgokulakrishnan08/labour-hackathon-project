@@ -1,4 +1,4 @@
-from .models import Person,EducationInfo,WorkInfoByOrganisation,WorkInfoByInstitution,UnorganisedWorkInfo,courses
+from .models import *
 from django import forms
 
 
@@ -17,10 +17,12 @@ class RegisterForm(forms.ModelForm):
 
 
 class AddCourseForm(forms.ModelForm):
-    uid=forms.CharField(max_length=16)
-    choices=[
-        ('class 10','class 10'),
-        ]
+
+    def __init__(self, code, *args, **kwargs):
+        super(AddCourseForm,self).__init__(*args, **kwargs)
+        #self.fields['uid'] = forms.CharField(max_length=16)
+        self.fields['course_name'] = forms.ChoiceField(choices = tuple([(i.course_name,i.course_name) for i in courses.objects.filter(inst_code=code)]))
+
     class Meta:
         model = EducationInfo
         exclude = ['inst_code']
@@ -31,23 +33,24 @@ class AddCourseForm(forms.ModelForm):
 
 
 class AddWorkOrganisationForm(forms.ModelForm):
-    choices=[
-        ('class 10','class 10'),
-        ('class 12','class 12')
-        ]
+    def __init__(self, code, *args, **kwargs):
+        super(AddWorkOrganisationForm,self).__init__(*args, **kwargs)
+        self.fields['role'] = forms.ChoiceField(choices = tuple([(i.role_name,i.role_name) for i in RolesByOrganisation.objects.filter(org_code=code)]))
+
     class Meta:
         model = WorkInfoByOrganisation
-        exclude = ['org_code']
+        exclude = ['org_code','resign_date']
 
 
 class AddWorkInstitutionForm(forms.ModelForm):
-    choices=[
-        ('class 10','class 10'),
-        ('class 12','class 12')
-        ]
+    def __init__(self, code, *args, **kwargs):
+        super(AddWorkInstitutionForm,self).__init__(*args, **kwargs)
+        self.fields['role'] = forms.ChoiceField(choices = tuple([(i.role_name,i.role_name) for i in RolesByInstitution.objects.filter(inst_code=code)]))
+    
     class Meta:
         model = WorkInfoByInstitution
-        exclude = ['inst_code']
+        exclude = ['inst_code','resign_date']
+
 
 class AddUnorganisedWorkForm(forms.ModelForm):
     class Meta:

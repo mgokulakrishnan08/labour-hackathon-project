@@ -61,13 +61,7 @@ def register(request,code):
                 obj.uid=uid
                 obj.save()
                 #card gen
-                p_obj = Person.objects.get(uid = uid)
-                name= p_obj.name
-                dob= p_obj.dob
-                gender= p_obj.gender
-                photo = p_obj.photo
-                info=f'Name:{name}\n\nDOB:{dob}\n\nGender:{gender}'
-                card=generateCard(uid,info,photo)
+                card=generateCard()
                 card.show()
                 #updating activity table
                 InstitutionActivity(uid=Person(uid = uid), inst_code = Institution(inst_code=code), action = f'User resistered {uid}').save()
@@ -80,12 +74,12 @@ def register(request,code):
 
 def add_course(request,code):
     if request.method == 'POST':
-            form = AddCourseForm(request.POST)
+            form = AddCourseForm(code, request.POST)
             if form.is_valid():
                 obj = EducationInfo()
                 uid = form.cleaned_data['uid']
                 print(type(Person(uid=uid)))
-                obj.uid = Person(uid=uid)
+                obj.uid = Person(uid = uid)
                 obj.inst_code = Institution(inst_code=code)
                 course_name = form.cleaned_data['course_name']
                 obj.course_name = course_name
@@ -97,15 +91,15 @@ def add_course(request,code):
 
 
     else:
-        form = AddCourseForm()  
+        form = AddCourseForm(code)  
     return render(request,'DigiResume/add_course.html',{'code':code,'sector':sector,'form':form})
 
 
 
-def add_work(request,code):
-    if sector==1:
+def add_work(request,code):    
+    if sector==1:    
         if request.method == 'POST':
-            form = AddWorkInstitutionForm(request.POST)
+            form = AddWorkInstitutionForm(code, request.POST)
             if form.is_valid():
                 obj = WorkInfoByInstitution()
                 uid = form.cleaned_data['uid']
@@ -114,18 +108,18 @@ def add_work(request,code):
                 role = form.cleaned_data['role']
                 obj.role = role
                 obj.join_date = form.cleaned_data['join_date']
-                obj.resign_date = form.cleaned_data['resign_date']
+                obj.resign_date = None
                 obj.save()
-                InstitutionActivity(uid=Person(uid = Person(uid=uid)), inst_code = Institution(inst_code=code), action = f'{role} Course Added for {uid}').save()
-                return HttpResponse(f'{role} Course Added for {uid}')
+                InstitutionActivity(uid=Person(uid = Person(uid=uid)), inst_code = Institution(inst_code=code), action = f'{role} work Added for {uid}').save()
+                return HttpResponse(f'{role} work Added for {uid}')
 
 
         else:
-            form = AddWorkInstitutionForm()
+            form = AddWorkInstitutionForm(code)
             
     elif sector==2:
         if request.method == 'POST':
-            form = AddWorkOrganisationForm(request.POST)
+            form = AddWorkOrganisationForm(code, request.POST)
             if form.is_valid():
                 obj = WorkInfoByOrganisation()
                 uid = form.cleaned_data['uid']
@@ -136,38 +130,69 @@ def add_work(request,code):
                 obj.join_date = form.cleaned_data['join_date']
                 obj.resign_date = form.cleaned_data['resign_date']
                 obj.save()
-                OrganisationActivity(uid=Person(uid = uid), org_code = Organisation(org_code=code), action = f'{role} Course Added for {uid}').save()
-                return HttpResponse(f'{role} Course Added for {uid}')
+                OrganisationActivity(uid=Person(uid = uid), org_code = Organisation(org_code=code), action = f'{role} work Added for {uid}').save()
+                return HttpResponse(f'{role} work Added for {uid}')
    
         else:
-            form = AddWorkOrganisationForm()
+            form = AddWorkOrganisationForm(code)
 
     elif sector==3:
         if request.method == 'POST':
             form = AddUnorganisedWorkForm(request.POST)
             if form.is_valid():
-                obj = UnorganisedWorkInfo()
+                # obj = UnorganisedWorkInfo()
                 uid = form.cleaned_data['uid']
-                obj.uid = Person(uid = uid)
-                obj.seva_code = SevaStore(seva_code=code)
+                # obj.uid = Person(uid = uid)
+                # obj.seva_code = SevaStore(seva_code=code)
                 work = form.cleaned_data['work_name']
-                obj.work_name = work
+                # obj.work_name = work
+                # obj.save()
+                SevaActivity(uid=Person(uid = uid), seva_code = SevaStore(seva_code=code), action = f'{work} work Added for {uid}').save()
+                obj = form.save(commit = False)
+                obj.seva_code = SevaStore(seva_code=code)
                 obj.save()
-                SevaActivity(uid=Person(uid = uid), seva_code = SevaStore(seva_code=code), action = f'{work} Course Added for {uid}').save()
-                return HttpResponse(f'{work} Course Added for {uid}')
+                return HttpResponse(f'{work} work Added for {uid}')
         else:
             form = AddUnorganisedWorkForm()            
-    return render(request,'DigiResume/add_work.html',{'code':code,'form':form})
+    return render(request,'DigiResume/add_work.html',{'code':code,'form':form, 'sector':sector})
 
+def add_resign(request,code):
+    if request.GET:
+        uid= request.GET.dict()['uid']
+        if sector==1:
+            o = WorkInfoByInstitution.objects.get(uid= uid, inst_code = code)
+            o.resign_date = request.GET.dict()['resign_date']
+            o.save()
+            InstitutionActivity(uid=Person(uid = Person(uid=uid)), inst_code = Institution(inst_code=code), action = f'{o.role} resign date Added for {uid}').save()
+            return HttpResponse(f'{o.role} resign date Added for {uid}')
 
+        elif sector==2:
+            o = WorkInfoByInstitution.objects.get(uid= uid, inst_code = code)
+            o.resign_date = request.GET.dict()['resign_date']
+            o.save()
+            OrganisationActivity(uid=Person(uid = uid), org_code = Organisation(org_code=code), action = f'{o.role} resign date Added for {uid}').save()
+            return HttpResponse(f'{o.role} resign date Added for {uid}')
+    else:
+        o=''
+
+    return render(request,'DigiResume/add_resign.html',{'code':code,'o':o, 'sector':sector})
 
 
 def activity(request,code):
-    return render(request,'DigiResume/activity.html',{'code':code})
+    if sector==1:
+        o=InstitutionActivity.objects.filter(inst_code=code)
+    if sector==2:
+        o=OrganisationActivity.objects.filter(org_code=code)
+    if sector==3:
+        o=SevaActivity.objects.filter(seva_code=code)
+    return render(request,'DigiResume/activity.html',{'code':code, 'o':o, 'sector':sector})
 
 
 
 def view_details(request,uid):
     x=Person.objects.get(uid=uid)
-    y = EducationInfo.objects.get(uid=uid)
-    return render(request,'DigiResume/view_details.html',{'x':x,'y':y})
+    y=EducationInfo.objects.filter(uid=uid)
+    z=WorkInfoByOrganisation.objects.filter(uid=uid)
+    a = WorkInfoByInstitution.objects.filter(uid=uid)
+    uw = UnorganisedWorkInfo.objects.filter(uid = uid)
+    return render(request,'DigiResume/view_details.html',{'x':x,'y':y,'z':z,'a':a, 'uw':uw})
