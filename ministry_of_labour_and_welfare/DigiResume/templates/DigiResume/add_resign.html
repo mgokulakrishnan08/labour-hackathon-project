@@ -7,6 +7,9 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
 <link rel="stylesheet" href="{% static 'css/layout.css' %}">
+
+
+
 </head>
 <body>
 
@@ -58,11 +61,13 @@
 
     <div>    
     <form method="GET" class="form-inline">
-        <label for="">Uid</label>
-        <input type="text" name="uid">
 
-        <label for="">Resign date</label>
-        <input type="text" name="resign_date">
+      <label for="">Uid</label>
+      <input type="text" name="uid" id="uid">
+
+      <label for="">Resign date</label>
+      <input type="text" name="resign_date">
+
       <div class="btn btn-block">
         <button class=" btn btn-primary" type="submit">
           Register
@@ -71,7 +76,6 @@
     </form>
 </div>
 
-{{o.role}}
 <!-- <div class="container d-flex h-100">
     <div class="row justify-content-center">
       <table>

@@ -1,5 +1,4 @@
-from asyncio import SendfileNotAvailableError
-from ctypes import resize
+import cv2
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
@@ -14,9 +13,8 @@ def generateUID():
 def generateQR(uid):
     return qr.make(uid)
 
-def generateCard():
+def generateCard(uid):
     p_obj = Person.objects.get(uid = uid)
-    uid=p_obj.uid
     name= p_obj.name
     dob= p_obj.dob
     gender= p_obj.gender
@@ -36,6 +34,17 @@ def generateCard():
     img.paste(resize_photo, (200,1200))
     return img
 
-
-
+def qrDetector():
+    cap = cv2.VideoCapture(0)
+    detector = cv2.QRCodeDetector()
+    while True:
+        _, img = cap.read()
+        data, one, _ = detector.detectAndDecode(img)
+        if data:
+            return data
+        cv2.imshow('qrcodescanner app',img)
+        if cv2.waitKey(1) == ord('q'):
+            break
+    cap.release(a)
+    cv2.destroyAllWindows()
     

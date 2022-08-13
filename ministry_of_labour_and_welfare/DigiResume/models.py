@@ -121,7 +121,7 @@ class SevaActivity(models.Model):
 class EducationInfo(models.Model):
     class Meta:
         unique_together = (('uid','inst_code','course_name'),)
-    uid=models.ForeignKey(Person,on_delete=models.CASCADE)
+    uid=models.ForeignKey(Person,on_delete=models.CASCADE,primary_key = False)
     inst_code=models.ForeignKey(Institution,on_delete=models.CASCADE)
     course_name=models.CharField(max_length=20)
     completion_date=models.DateField()

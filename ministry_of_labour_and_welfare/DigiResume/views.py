@@ -1,4 +1,5 @@
 import base64
+from io import StringIO, BytesIO
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from .models import *
@@ -6,12 +7,17 @@ from .utilities import *
 from .forms import *
 
 # Create your views here.
+#sector =1
 
 def index(request):
     if request.GET:
         uid=request.GET.dict()['id'].upper()
         return redirect(f'/{uid}/view_details')
     return render(request,'DigiResume/index.html')
+
+def loginQR(request):
+    uid = qrDetector()
+    return redirect(f'/{uid}/view_details')
 
 
 
@@ -38,6 +44,9 @@ def login(request):
 
 
 
+
+
+
 def home(request,code):
     if sector is 1:
         x=Institution.objects.get(inst_code=code)
@@ -46,6 +55,8 @@ def home(request,code):
     elif sector is 3:
         x=SevaStore.objects.get(seva_code=code)
     return render(request,'DigiResume/home.html',{'sector':sector,'code':code,'x':x})
+
+
 
 
 
@@ -61,14 +72,21 @@ def register(request,code):
                 obj.uid=uid
                 obj.save()
                 #card gen
-                card=generateCard()
-                card.show()
+                card=generateCard(uid)
+                #card.show()
+
+                buffer = StringIO()
+                card.save(buffer, format='PNG')
+                op = base64.b64encode(buffer.getvalue())
                 #updating activity table
                 InstitutionActivity(uid=Person(uid = uid), inst_code = Institution(inst_code=code), action = f'User resistered {uid}').save()
-                return HttpResponse(f'User resistered {uid}')
+                return HttpResponse(f"""User resistered {uid}<br><a><img src="data:image/png;base64,{op}"/></a>""")
     else:
         form = RegisterForm()
     return render(request,'DigiResume/register.html',{'form':form,'sector':sector,'code':code})
+
+
+
 
 
 
@@ -77,7 +95,7 @@ def add_course(request,code):
             form = AddCourseForm(code, request.POST)
             if form.is_valid():
                 obj = EducationInfo()
-                uid = form.cleaned_data['uid']
+                uid = request.POST['uid']
                 print(type(Person(uid=uid)))
                 obj.uid = Person(uid = uid)
                 obj.inst_code = Institution(inst_code=code)
@@ -93,6 +111,9 @@ def add_course(request,code):
     else:
         form = AddCourseForm(code)  
     return render(request,'DigiResume/add_course.html',{'code':code,'sector':sector,'form':form})
+
+
+
 
 
 
@@ -128,7 +149,7 @@ def add_work(request,code):
                 role = form.cleaned_data['role']
                 obj.role = role
                 obj.join_date = form.cleaned_data['join_date']
-                obj.resign_date = form.cleaned_data['resign_date']
+                obj.resign_date = None
                 obj.save()
                 OrganisationActivity(uid=Person(uid = uid), org_code = Organisation(org_code=code), action = f'{role} work Added for {uid}').save()
                 return HttpResponse(f'{role} work Added for {uid}')
@@ -156,9 +177,16 @@ def add_work(request,code):
             form = AddUnorganisedWorkForm()            
     return render(request,'DigiResume/add_work.html',{'code':code,'form':form, 'sector':sector})
 
+
+
+
+
+
 def add_resign(request,code):
     if request.GET:
         uid= request.GET.dict()['uid']
+        o = WorkInfoByInstitution.objects.get(uid= uid, inst_code = code)
+        name = o.name
         if sector==1:
             o = WorkInfoByInstitution.objects.get(uid= uid, inst_code = code)
             o.resign_date = request.GET.dict()['resign_date']
@@ -167,7 +195,7 @@ def add_resign(request,code):
             return HttpResponse(f'{o.role} resign date Added for {uid}')
 
         elif sector==2:
-            o = WorkInfoByInstitution.objects.get(uid= uid, inst_code = code)
+            o = WorkInfoByOrganisation.objects.get(uid= uid, org_code = code)
             o.resign_date = request.GET.dict()['resign_date']
             o.save()
             OrganisationActivity(uid=Person(uid = uid), org_code = Organisation(org_code=code), action = f'{o.role} resign date Added for {uid}').save()
@@ -178,6 +206,9 @@ def add_resign(request,code):
     return render(request,'DigiResume/add_resign.html',{'code':code,'o':o, 'sector':sector})
 
 
+
+
+
 def activity(request,code):
     if sector==1:
         o=InstitutionActivity.objects.filter(inst_code=code)
@@ -186,6 +217,8 @@ def activity(request,code):
     if sector==3:
         o=SevaActivity.objects.filter(seva_code=code)
     return render(request,'DigiResume/activity.html',{'code':code, 'o':o, 'sector':sector})
+
+
 
 
 
