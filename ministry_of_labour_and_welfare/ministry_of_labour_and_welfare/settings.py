@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'crispy_forms',
+    'rest_framework',
     'DigiResume.apps.DigiresumeConfig',
     'django.contrib.admin',
     'django.contrib.auth',

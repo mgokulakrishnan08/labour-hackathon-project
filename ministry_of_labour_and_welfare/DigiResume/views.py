@@ -2,12 +2,42 @@ import base64
 from io import StringIO, BytesIO
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework import viewsets
+from collections import namedtuple
+from .serializers import *
 from .models import *
 from .utilities import *
 from .forms import *
 
 # Create your views here.
 #sector =1
+
+#api 
+
+
+
+
+class API(APIView):
+    def get(self, request, uid):
+        p = Person.objects.get(uid = uid)
+        e = EducationInfo.objects.filter(uid=uid)
+        wo = WorkInfoByOrganisation.objects.filter(uid=uid)
+        wi = WorkInfoByInstitution.objects.filter(uid=uid)
+        uw = UnorganisedWorkInfo.objects.filter(uid = uid)
+        serializer ={ 'details': PersonSerializer(p).data , 'education' : EducationInfoSerializer(e, many=True).data, 'work ' : WorkInfoByInstitutionSerializer(wi, many=True).data + WorkInfoByOrganisationSerializer(wo, many=True).data }
+        #serializer = EducationInfoSerializer(e, many=True)
+        return Response(serializer)
+
+
+
+
+
+
+#--------------------------------------------------------------------------------------------#
+
 
 def index(request):
     if request.GET:
@@ -48,11 +78,11 @@ def login(request):
 
 
 def home(request,code):
-    if sector is 1:
+    if sector==1:
         x=Institution.objects.get(inst_code=code)
-    elif sector is 2:
+    elif sector==2:
         x=Organisation.objects.get(org_code=code)        
-    elif sector is 3:
+    elif sector==3:
         x=SevaStore.objects.get(seva_code=code)
     return render(request,'DigiResume/home.html',{'sector':sector,'code':code,'x':x})
 
