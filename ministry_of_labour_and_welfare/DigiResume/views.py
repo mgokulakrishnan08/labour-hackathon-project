@@ -1,3 +1,4 @@
+from ast import Return
 import base64
 from io import StringIO, BytesIO
 from django.shortcuts import redirect, render
@@ -13,7 +14,7 @@ from .utilities import *
 from .forms import *
 
 # Create your views here.
-#sector =1
+sector =1
 
 #api 
 
@@ -124,23 +125,36 @@ def add_course(request,code):
     if request.method == 'POST':
             form = AddCourseForm(code, request.POST)
             if form.is_valid():
-                obj = EducationInfo()
-                uid = request.POST['uid']
-                print(type(Person(uid=uid)))
-                obj.uid = Person(uid = uid)
-                obj.inst_code = Institution(inst_code=code)
-                course_name = form.cleaned_data['course_name']
-                obj.course_name = course_name
-                obj.grade = form.cleaned_data['grade']
-                obj.completion_date = form.cleaned_data['completion_date']
-                obj.save()
-                InstitutionActivity(uid=Person(uid = uid), inst_code = Institution(inst_code=code), action = f'{course_name} Course Added for {uid}').save()
-                return HttpResponse(f'{course_name} Course Added for {uid}')
-
-
+                request.session['uid'] = form.cleaned_data['uid']
+                request.session['course_name'] = form.cleaned_data['course_name']
+                request.session['completion_date'] = str(form.cleaned_data['completion_date'])
+                request.session['grade'] = form.cleaned_data['grade']
+                return redirect(f'/{code}/add_course/confirm')
     else:
         form = AddCourseForm(code)  
     return render(request,'DigiResume/add_course.html',{'code':code,'sector':sector,'form':form})
+
+
+
+
+def confirmAddCourse(request,code):
+    obj = EducationInfo()
+    uid = request.session['uid']
+    obj.uid = Person(uid = uid)
+    obj.inst_code =  Institution(inst_code=code)
+    course_name = request.session['course_name']
+    obj.course_name = course_name
+    obj.completion_date = request.session['completion_date']
+    obj.grade = request.session['grade']
+    if request.POST:
+        obj.save()
+        InstitutionActivity(uid=Person(uid = uid),
+         inst_code = Institution(inst_code=code),
+          action = f'{course_name} Course Added for {uid}').save()
+        return HttpResponse(f'{course_name} Course Added for {uid}')
+
+    return render(request,'DigiResume/confirm.html',{'x' : Person.objects.get(uid=uid)})
+
 
 
 
@@ -152,19 +166,10 @@ def add_work(request,code):
         if request.method == 'POST':
             form = AddWorkInstitutionForm(code, request.POST)
             if form.is_valid():
-                obj = WorkInfoByInstitution()
-                uid = form.cleaned_data['uid']
-                obj.uid = Person(uid = uid)
-                obj.inst_code = Institution(inst_code=code)
-                role = form.cleaned_data['role']
-                obj.role = role
-                obj.join_date = form.cleaned_data['join_date']
-                obj.resign_date = None
-                obj.save()
-                InstitutionActivity(uid=Person(uid = Person(uid=uid)), inst_code = Institution(inst_code=code), action = f'{role} work Added for {uid}').save()
-                return HttpResponse(f'{role} work Added for {uid}')
-
-
+               request.session[' uid'] = form.cleaned_data['uid']
+               request.session['role'] = form.cleaned_data['role']
+               request.session['join_date'] = str(form.cleaned_data['join_date'])
+               return redirect(f'/{code}/add_work/confirm')
         else:
             form = AddWorkInstitutionForm(code)
             
@@ -172,17 +177,10 @@ def add_work(request,code):
         if request.method == 'POST':
             form = AddWorkOrganisationForm(code, request.POST)
             if form.is_valid():
-                obj = WorkInfoByOrganisation()
-                uid = form.cleaned_data['uid']
-                obj.uid = Person(uid = uid)
-                obj.org_code = Organisation(org_code=code)
-                role = form.cleaned_data['role']
-                obj.role = role
-                obj.join_date = form.cleaned_data['join_date']
-                obj.resign_date = None
-                obj.save()
-                OrganisationActivity(uid=Person(uid = uid), org_code = Organisation(org_code=code), action = f'{role} work Added for {uid}').save()
-                return HttpResponse(f'{role} work Added for {uid}')
+               request.session[' uid'] = form.cleaned_data['uid']
+               request.session['role'] = form.cleaned_data['role']
+               request.session['join_date'] = str(form.cleaned_data['join_date'])
+               return redirect(f'/{code}/add_work/confirm')
    
         else:
             form = AddWorkOrganisationForm(code)
@@ -191,13 +189,8 @@ def add_work(request,code):
         if request.method == 'POST':
             form = AddUnorganisedWorkForm(request.POST)
             if form.is_valid():
-                # obj = UnorganisedWorkInfo()
                 uid = form.cleaned_data['uid']
-                # obj.uid = Person(uid = uid)
-                # obj.seva_code = SevaStore(seva_code=code)
                 work = form.cleaned_data['work_name']
-                # obj.work_name = work
-                # obj.save()
                 SevaActivity(uid=Person(uid = uid), seva_code = SevaStore(seva_code=code), action = f'{work} work Added for {uid}').save()
                 obj = form.save(commit = False)
                 obj.seva_code = SevaStore(seva_code=code)
@@ -209,31 +202,82 @@ def add_work(request,code):
 
 
 
+def confirmAddWork(request, code):
+    uid = request.session['uid']
+    if sector==1:
+        role = request.session['role']
+        obj = WorkInfoByInstitution()
+        obj.uid = Person(uid = uid)
+        obj.inst_code = Institution(inst_code = code)
+        obj.role = role
+        obj.join_date = request.session['join_date']
+        obj.resign_date = None
+        if request.POST:
+            obj.save()
+            InstitutionActivity(uid=Person(uid = Person(uid=uid)), inst_code = Institution(inst_code=code), action = f'{role} work Added for {uid}').save()
+            return HttpResponse(f'{role} work Added for {uid}')
+        
+    elif sector==2:
+        role = request.session['role']
+        obj = WorkInfoByOrganisation()
+        obj.uid = Person(uid = uid)
+        obj.org_code = Organisation(inst_code = code)
+        obj.role = request.session['role']
+        obj.join_date = request.session['join_date']
+        obj.resign_date = None
+        if request.POST:
+            obj.save()
+            OrganisationActivity(uid=Person(uid = uid), org_code = Organisation(org_code=code), action = f'{role} work Added for {uid}').save()
+            return HttpResponse(f'{role} work Added for {uid}')
+
+        elif sector==3:
+            pass
+    return render(request,'DigiResume/confirm.html',{'x' : Person.objects.get(uid=uid)})
+
+
 
 
 
 def add_resign(request,code):
     if request.GET:
-        uid= request.GET.dict()['uid']
-        o = WorkInfoByInstitution.objects.get(uid= uid, inst_code = code)
-        name = o.name
+        request.session['uid'] = request.GET.dict()['uid']
         if sector==1:
-            o = WorkInfoByInstitution.objects.get(uid= uid, inst_code = code)
-            o.resign_date = request.GET.dict()['resign_date']
-            o.save()
-            InstitutionActivity(uid=Person(uid = Person(uid=uid)), inst_code = Institution(inst_code=code), action = f'{o.role} resign date Added for {uid}').save()
-            return HttpResponse(f'{o.role} resign date Added for {uid}')
+            request.session['resign_date'] =str(request.GET.dict()['resign_date'])
+            return redirect(f'/{code}/add_resign/confirm')
 
         elif sector==2:
-            o = WorkInfoByOrganisation.objects.get(uid= uid, org_code = code)
-            o.resign_date = request.GET.dict()['resign_date']
-            o.save()
-            OrganisationActivity(uid=Person(uid = uid), org_code = Organisation(org_code=code), action = f'{o.role} resign date Added for {uid}').save()
-            return HttpResponse(f'{o.role} resign date Added for {uid}')
+            request.session['resign_date'] =str(request.GET.dict()['resign_date'])
+            return redirect(f'/{code}/add_resign/confirm')
+
     else:
         o=''
-
     return render(request,'DigiResume/add_resign.html',{'code':code,'o':o, 'sector':sector})
+
+
+
+def confirmAddResign(request, code):
+    uid = request.session['uid']
+    if sector==1:
+        if request.POST:
+            obj = WorkInfoByInstitution.objects.get(uid = uid, inst_code = code)
+            role = obj.role
+            obj.resign_date = request.session['resign_date']
+            obj.save()
+            InstitutionActivity(uid=Person(uid = Person(uid=uid)), inst_code = Institution(inst_code=code), action = f'{role} resign date Added for {uid}').save()
+            return HttpResponse(f'{role} resign date Added for {uid}')
+    elif sector==2:
+        if request.POST:
+            obj = WorkInfoByOrganisation.objects.get(uid = uid, org_code = code)
+            role = obj.role
+            obj.resign_date = request.session['resign_date']
+            obj.save()
+            OrganisationActivity(uid=Person(uid = Person(uid=uid)), org_code = Organisation(org_code=code), action = f'{role} resign date Added for {uid}').save()
+            return HttpResponse(f'{role} resign date Added for {uid}')
+    return render(request,'DigiResume/confirm.html',{'x' : Person.objects.get(uid=uid), 'resign' : True})
+
+
+
+
 
 
 

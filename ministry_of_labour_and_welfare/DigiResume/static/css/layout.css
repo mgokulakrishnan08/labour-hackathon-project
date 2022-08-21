@@ -62,7 +62,7 @@
       padding: 5px;
       background-image: linear-gradient(to right,#000046,#1CB5E0);
       color: white;
-      position: relative;
+      position: fixed;
       bottom: 0;
       width: 100%;
     }

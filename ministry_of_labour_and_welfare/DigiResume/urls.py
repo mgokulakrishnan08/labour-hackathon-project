@@ -12,6 +12,10 @@ urlpatterns = [
     path('<str:code>/add_resign/',add_resign,name='add_resign'),
     path('<str:code>/activity/',activity,name='activity'),
     path("<str:uid>/view_details/",view_details,name='view_details'),
+    path("<str:code>/add_course/confirm", confirmAddCourse, name='confirmAddCourse'),
+    path("<str:code>/add_work/confirm", confirmAddWork, name='confirmAddWork'),
+    path("<str:code>/add_resign/confirm", confirmAddResign, name='confirmAddResign'),
+
     path('<str:uid>/api/', API.as_view())
 
 ]
