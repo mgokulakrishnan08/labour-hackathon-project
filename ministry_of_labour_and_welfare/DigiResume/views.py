@@ -128,11 +128,23 @@ def add_course(request,code):
                 request.session['grade'] = form.cleaned_data['grade']
                 return redirect(f'/{code}/add_course/confirm')
     else:
-        form = AddCourseForm(code)  
+        form = AddCourseForm(code,)  
     return render(request,'DigiResume/add_course.html',{'code':code,'sector':sector,'form':form})
 
 
-
+def add_course_qr(request,code):
+    uid = qrDetector()
+    if request.method == 'POST':
+            form = AddCourseForm(code, request.POST)
+            if form.is_valid():
+                request.session['uid'] = form.cleaned_data['uid']
+                request.session['course_name'] = form.cleaned_data['course_name']
+                request.session['completion_date'] = str(form.cleaned_data['completion_date'])
+                request.session['grade'] = form.cleaned_data['grade']
+                return redirect(f'/{code}/add_course/confirm')
+    else:
+        form = AddCourseForm(code, initial = {'uid': uid})  
+    return render(request,'DigiResume/add_course.html',{'code':code,'sector':sector,'form':form})
 
 def confirmAddCourse(request,code):
     obj = EducationInfo()
@@ -300,3 +312,15 @@ def view_details(request,uid):
     a = WorkInfoByInstitution.objects.filter(uid=uid)
     uw = UnorganisedWorkInfo.objects.filter(uid = uid)
     return render(request,'DigiResume/view_details.html',{'x':x,'y':y,'z':z,'a':a, 'uw':uw})
+
+
+
+def trace(request):
+    #in particular yr
+    #x = WorkInfoByOrganisation.objects.filter(join_date__gte='2019-12-31', join_date__lte='2021-01-01')
+   
+   #not employed
+    x = WorkInfoByOrganisation.objects.exclude(resign_date = None )
+
+    #not employed so far
+    return render(request,'DigiResume/trace.html',{'x':x})
