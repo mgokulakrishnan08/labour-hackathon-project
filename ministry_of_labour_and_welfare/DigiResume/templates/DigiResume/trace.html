@@ -17,6 +17,7 @@
     <table class="table table-bordered table-striped">
         <thead class="thead-dark">
           <tr>
+            <th>sl.no</th>
             <th>uid</th>
             <th>org name</th>
             <th>role name</th>
@@ -28,6 +29,7 @@
         <tr>
           {% for i in x %}
           <tr>
+            <td>{{forloop.counter}}</td>
             <td>{{i.uid.name}}</td>
             <td>{{i.org_code.org_name}}</td>
             <td>{{i.role}}</td>

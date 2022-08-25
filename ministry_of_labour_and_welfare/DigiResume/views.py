@@ -313,10 +313,10 @@ def view_details(request,uid):
 
 def trace(request):
     #in particular yr
-    #x = WorkInfoByOrganisation.objects.filter(join_date__gte='2019-12-31', join_date__lte='2021-01-01')
+    x = WorkInfoByOrganisation.objects.filter(join_date__gte='2024-12-31', join_date__lte='2026-01-01')
    
    #not employed
-    x = WorkInfoByOrganisation.objects.exclude(resign_date = None )
+   # x = WorkInfoByOrganisation.objects.exclude(resign_date = None )
 
     #not employed so far
     return render(request,'DigiResume/trace.html',{'x':x})
