@@ -119,8 +119,8 @@ class SevaActivity(models.Model):
 #person information
 
 class EducationInfo(models.Model):
-    class Meta:
-        unique_together = (('uid','inst_code','course_name'),)
+    # class Meta:
+    #     unique_together = (('uid','inst_code','course_name'),)
     uid=models.ForeignKey(Person,on_delete=models.CASCADE,primary_key = False)
     inst_code=models.ForeignKey(Institution,on_delete=models.CASCADE)
     course_name=models.CharField(max_length=20)
@@ -128,8 +128,8 @@ class EducationInfo(models.Model):
     grade=models.IntegerField()
 
 class WorkInfoByOrganisation(models.Model):
-    class Meta:
-        unique_together = (('uid','org_code','role'),)
+    # class Meta:
+    #     unique_together = (('uid','org_code','role'),)
     uid=models.ForeignKey(Person,on_delete=models.CASCADE)
     org_code=models.ForeignKey(Organisation,on_delete=models.CASCADE)
     role=models.CharField(max_length=20)
@@ -138,8 +138,8 @@ class WorkInfoByOrganisation(models.Model):
 
 
 class WorkInfoByInstitution(models.Model):
-    class Meta:
-        unique_together = (('uid','inst_code','role'),)
+    # class Meta:
+    #     unique_together = (('uid','inst_code','role'),)
     uid=models.ForeignKey(Person,on_delete=models.CASCADE)
     inst_code=models.ForeignKey(Institution,on_delete=models.CASCADE)
     role=models.CharField(max_length=20)

@@ -14,7 +14,7 @@ from .utilities import *
 from .forms import *
 
 # Create your views here.
-sector =1
+
 
 #api 
 
@@ -104,14 +104,11 @@ def register(request,code):
                 obj.save()
                 #card gen
                 card=generateCard(uid)
-                #card.show()
+                card.show()
 
-                buffer = StringIO()
-                card.save(buffer, format='PNG')
-                op = base64.b64encode(buffer.getvalue())
                 #updating activity table
                 InstitutionActivity(uid=Person(uid = uid), inst_code = Institution(inst_code=code), action = f'User resistered {uid}').save()
-                return HttpResponse(f"""User resistered {uid}<br><a><img src="data:image/png;base64,{op}"/></a>""")
+                return HttpResponse(f"""User resistered {uid}<br><a><img src=""/></a>""")
     else:
         form = RegisterForm()
     return render(request,'DigiResume/register.html',{'form':form,'sector':sector,'code':code})
@@ -221,7 +218,7 @@ def confirmAddWork(request, code):
         role = request.session['role']
         obj = WorkInfoByOrganisation()
         obj.uid = Person(uid = uid)
-        obj.org_code = Organisation(inst_code = code)
+        obj.org_code = Organisation(org_code = code)
         obj.role = request.session['role']
         obj.join_date = request.session['join_date']
         obj.resign_date = None
@@ -251,7 +248,7 @@ def add_resign(request,code):
 
     else:
         o=''
-    return render(request,'DigiResume/add_resign.html',{'code':code,'o':o, 'sector':sector})
+    return render(request,'DigiResume/add_resign.html',{'code': code,'o':o, 'sector':sector})
 
 
 
