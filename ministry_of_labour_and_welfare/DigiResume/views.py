@@ -161,11 +161,7 @@ def confirmAddCourse(request,code):
          inst_code = Institution(inst_code=code),
           action = f'{course_name} Course Added for {uid}').save()
         return HttpResponse(f'{course_name} Course Added for {uid}')
-
     return render(request,'DigiResume/confirm.html',{'x' : Person.objects.get(uid=uid)})
-
-
-
 
 
 
@@ -175,7 +171,7 @@ def add_work(request,code):
         if request.method == 'POST':
             form = AddWorkInstitutionForm(code, request.POST)
             if form.is_valid():
-               request.session[' uid'] = form.cleaned_data['uid']
+               request.session['uid'] = form.cleaned_data['uid']
                request.session['role'] = form.cleaned_data['role']
                request.session['join_date'] = str(form.cleaned_data['join_date'])
                return redirect(f'/{code}/add_work/confirm')
@@ -186,7 +182,7 @@ def add_work(request,code):
         if request.method == 'POST':
             form = AddWorkOrganisationForm(code, request.POST)
             if form.is_valid():
-               request.session[' uid'] = form.cleaned_data['uid']
+               request.session['uid'] = form.cleaned_data['uid']
                request.session['role'] = form.cleaned_data['role']
                request.session['join_date'] = str(form.cleaned_data['join_date'])
                return redirect(f'/{code}/add_work/confirm')
