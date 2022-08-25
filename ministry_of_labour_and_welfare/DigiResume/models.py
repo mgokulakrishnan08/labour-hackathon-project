@@ -48,7 +48,7 @@ class courses(models.Model):
 
 class RolesByInstitution(models.Model):
     inst_code=models.ForeignKey(Institution,on_delete=models.CASCADE)
-    role_name=models.CharField(max_length=20)
+    role_name=models.CharField(max_length=100)
 
 
 
@@ -80,7 +80,7 @@ class Organisation(models.Model):
 
 class RolesByOrganisation(models.Model):
     org_code=models.ForeignKey(Organisation,on_delete=models.CASCADE)
-    role_name=models.CharField(max_length=20)
+    role_name=models.CharField(max_length=100)
 
 
 

@@ -24,7 +24,7 @@ def generateCard(uid):
     qrimg=generateQR(uid)
     img= Image.open(resources.objects.get(pk=1).img)
     photo= Image.open(photo)
-    resize_photo=photo.resize((300,300))
+    resize_photo=photo.resize((500,500))
     I1=ImageDraw.Draw(img)
     uid_font=ImageFont.truetype('arial.ttf',85)
     info_font=ImageFont.truetype('arial.ttf',100)
