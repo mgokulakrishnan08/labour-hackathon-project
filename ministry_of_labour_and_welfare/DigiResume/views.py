@@ -279,10 +279,6 @@ def confirmAddResign(request, code):
 
 
 
-
-
-
-
 def activity(request,code):
     if sector==1:
         o=InstitutionActivity.objects.filter(inst_code=code)
