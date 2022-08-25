@@ -104,11 +104,8 @@ def register(request,code):
                 obj.save()
                 #card gen
                 card=generateCard(uid)
-                #card.show()
+                card.show()
 
-                buffer = StringIO()
-                card.save(buffer, format='PNG')
-                op = base64.b64encode(buffer.getvalue())
                 #updating activity table
                 InstitutionActivity(uid=Person(uid = uid), inst_code = Institution(inst_code=code), action = f'User resistered {uid}').save()
                 return HttpResponse(f"""User resistered {uid}<br><a><img src="data:image/png;base64,{op}"/></a>""")

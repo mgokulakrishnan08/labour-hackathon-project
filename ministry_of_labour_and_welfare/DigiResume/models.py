@@ -44,11 +44,11 @@ class Institution(models.Model):
 
 class courses(models.Model):
     inst_code=models.ForeignKey(Institution,on_delete=models.CASCADE)
-    course_name=models.CharField(max_length=20)
+    course_name=models.CharField(max_length=100)
 
 class RolesByInstitution(models.Model):
     inst_code=models.ForeignKey(Institution,on_delete=models.CASCADE)
-    role_name=models.CharField(max_length=20)
+    role_name=models.CharField(max_length=100)
 
 
 
