@@ -142,14 +142,14 @@ class WorkInfoByInstitution(models.Model):
     #     unique_together = (('uid','inst_code','role'),)
     uid=models.ForeignKey(Person,on_delete=models.CASCADE)
     inst_code=models.ForeignKey(Institution,on_delete=models.CASCADE)
-    role=models.CharField(max_length=20)
+    role=models.CharField(max_length=200)
     join_date=models.DateField()
     resign_date=models.DateField(null=True,blank=True)
 
 class UnorganisedWorkInfo(models.Model):
     uid=models.ForeignKey(Person,on_delete=models.CASCADE)
     seva_code=models.ForeignKey(SevaStore,on_delete=models.CASCADE)
-    work_name=models.CharField(max_length=20)
+    work_name=models.CharField(max_length=200)
 
 #-----------------------------------------------------------------------#
 class resources(models.Model):
