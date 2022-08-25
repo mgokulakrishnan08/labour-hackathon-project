@@ -30,7 +30,7 @@ def generateCard(uid):
     info_font=ImageFont.truetype('arial.ttf',100)
     I1.text((1400,1900),uid_temp,font=uid_font,fill=(0,0,0))
     I1.text((1000,1200),info,font=info_font,fill=(0,0,0))
-    img.paste(qrimg.resize((600,600)),(2700,1200))
+    img.paste(qrimg.resize((800,800)),(2300,1100))
     img.paste(resize_photo, (200,1200))
     return img
 
