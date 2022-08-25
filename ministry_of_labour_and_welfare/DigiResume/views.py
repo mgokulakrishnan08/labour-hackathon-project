@@ -217,6 +217,53 @@ def add_work(request,code):
 
 
 
+
+def add_work_qr(request,code):
+    uid =''
+    message = None
+    try:
+        uid = qrDetector()
+    except:
+        message ='cam not found'    
+    if sector==1:    
+        if request.method == 'POST':
+            form = AddWorkInstitutionForm(code, request.POST)
+            if form.is_valid():
+               request.session['uid'] = form.cleaned_data['uid']
+               request.session['role'] = form.cleaned_data['role']
+               request.session['join_date'] = str(form.cleaned_data['join_date'])
+               return redirect(f'/{code}/add_work/confirm')
+        else:
+            form = AddWorkInstitutionForm(code, initial = {'uid': uid})
+            
+    elif sector==2:
+        if request.method == 'POST':
+            form = AddWorkOrganisationForm(code, request.POST)
+            if form.is_valid():
+               request.session['uid'] = form.cleaned_data['uid']
+               request.session['role'] = form.cleaned_data['role']
+               request.session['join_date'] = str(form.cleaned_data['join_date'])
+               return redirect(f'/{code}/add_work/confirm')
+   
+        else:
+            form = AddWorkOrganisationForm(code, initial = {'uid': uid})
+
+    elif sector==3:
+        if request.method == 'POST':
+            form = AddUnorganisedWorkForm(request.POST)
+            if form.is_valid():
+                uid = form.cleaned_data['uid']
+                work = form.cleaned_data['work_name']
+                SevaActivity(uid=Person(uid = uid), seva_code = SevaStore(seva_code=code), action = f'{work} work Added for {uid}').save()
+                obj = form.save(commit = False)
+                obj.seva_code = SevaStore(seva_code=code)
+                obj.save()
+                return HttpResponse(f'{work} work Added for {uid}')
+        else:
+            form = AddUnorganisedWorkForm(initial = {'uid': uid})            
+    return render(request,'DigiResume/add_work.html',{'code':code,'form':form, 'sector':sector, 'message':message})
+
+
 def confirmAddWork(request, code):
     uid = request.session['uid']
     if sector==1:
@@ -267,6 +314,29 @@ def add_resign(request,code):
     else:
         o=''
     return render(request,'DigiResume/add_resign.html',{'code': code,'o':o, 'sector':sector})
+
+
+
+def add_resign_qr(request,code):
+    uid =''
+    message = None
+    try:
+        uid = qrDetector()
+    except:
+        message ='cam not found'
+    if request.GET:
+        request.session['uid'] = request.GET.dict()['uid']
+        if sector==1:
+            request.session['resign_date'] =str(request.GET.dict()['resign_date'])
+            return redirect(f'/{code}/add_resign/confirm')
+
+        elif sector==2:
+            request.session['resign_date'] =str(request.GET.dict()['resign_date'])
+            return redirect(f'/{code}/add_resign/confirm')
+
+    else:
+        o=''
+    return render(request,'DigiResume/add_resign.html',{'code': code,'o':o, 'sector':sector, 'uid':uid, 'message':message})
 
 
 
