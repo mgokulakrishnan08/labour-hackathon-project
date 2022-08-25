@@ -1,5 +1,6 @@
 from ast import Return
 import base64
+from email.message import Message
 from io import StringIO, BytesIO
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
@@ -128,12 +129,17 @@ def add_course(request,code):
                 request.session['grade'] = form.cleaned_data['grade']
                 return redirect(f'/{code}/add_course/confirm')
     else:
-        form = AddCourseForm(code,)  
+        form = AddCourseForm(code)  
     return render(request,'DigiResume/add_course.html',{'code':code,'sector':sector,'form':form})
 
 
 def add_course_qr(request,code):
-    uid = qrDetector()
+    uid =''
+    message = None
+    try:
+        uid = qrDetector()
+    except:
+        message ='cam not found'
     if request.method == 'POST':
             form = AddCourseForm(code, request.POST)
             if form.is_valid():
@@ -144,9 +150,10 @@ def add_course_qr(request,code):
                 return redirect(f'/{code}/add_course/confirm')
     else:
         form = AddCourseForm(code, initial = {'uid': uid})  
-    return render(request,'DigiResume/add_course.html',{'code':code,'sector':sector,'form':form})
+    return render(request,'DigiResume/add_course.html',{'code':code,'sector':sector,'form':form, 'message':message})
 
 def confirmAddCourse(request,code):
+    message = ''
     obj = EducationInfo()
     uid = request.session['uid']
     obj.uid = Person(uid = uid)
@@ -156,12 +163,15 @@ def confirmAddCourse(request,code):
     obj.completion_date = request.session['completion_date']
     obj.grade = request.session['grade']
     if request.POST:
-        obj.save()
-        InstitutionActivity(uid=Person(uid = uid),
-         inst_code = Institution(inst_code=code),
-          action = f'{course_name} Course Added for {uid}').save()
+        try:
+            obj.save()
+            InstitutionActivity(uid=Person(uid = uid),
+            inst_code = Institution(inst_code=code),
+            action = f'{course_name} Course Added for {uid}').save()
+        except:
+            message = 'course already added'
         return HttpResponse(f'{course_name} Course Added for {uid}')
-    return render(request,'DigiResume/confirm.html',{'x' : Person.objects.get(uid=uid)})
+    return render(request,'DigiResume/confirm.html',{'x' : Person.objects.get(uid=uid), 'message':message})
 
 
 
@@ -312,11 +322,17 @@ def view_details(request,uid):
 
 
 def trace(request):
-    #in particular yr
-    x = WorkInfoByOrganisation.objects.filter(join_date__gte='2024-12-31', join_date__lte='2026-01-01')
-   
-   #not employed
-   # x = WorkInfoByOrganisation.objects.exclude(resign_date = None )
+    x=''
+    if request.GET:
+        from_date = request.GET.dict()['from'] 
+        to = request.GET.dict()['to']
+        print(from_date)
+        #in particular yr
+        x = WorkInfoByOrganisation.objects.filter(join_date__gte=from_date, join_date__lte=to)
+        return render(request,'DigiResume/trace.html',{'x': x})
+    
+        #not employed
+        # x = WorkInfoByOrganisation.objects.exclude(resign_date = None )
 
-    #not employed so far
-    return render(request,'DigiResume/trace.html',{'x':x})
+        #not employed so far
+    return render(request,'DigiResume/trace.html')
