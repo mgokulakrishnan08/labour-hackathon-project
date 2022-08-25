@@ -44,11 +44,11 @@ class Institution(models.Model):
 
 class courses(models.Model):
     inst_code=models.ForeignKey(Institution,on_delete=models.CASCADE)
-    course_name=models.CharField(max_length=20)
+    course_name=models.CharField(max_length=100)
 
 class RolesByInstitution(models.Model):
     inst_code=models.ForeignKey(Institution,on_delete=models.CASCADE)
-    role_name=models.CharField(max_length=20)
+    role_name=models.CharField(max_length=100)
 
 
 
@@ -80,7 +80,7 @@ class Organisation(models.Model):
 
 class RolesByOrganisation(models.Model):
     org_code=models.ForeignKey(Organisation,on_delete=models.CASCADE)
-    role_name=models.CharField(max_length=20)
+    role_name=models.CharField(max_length=100)
 
 
 
@@ -119,37 +119,37 @@ class SevaActivity(models.Model):
 #person information
 
 class EducationInfo(models.Model):
-    class Meta:
-        unique_together = (('uid','inst_code','course_name'),)
+    # class Meta:
+    #     unique_together = (('uid','inst_code','course_name'),)
     uid=models.ForeignKey(Person,on_delete=models.CASCADE,primary_key = False)
     inst_code=models.ForeignKey(Institution,on_delete=models.CASCADE)
-    course_name=models.CharField(max_length=20)
+    course_name=models.CharField(max_length=100)
     completion_date=models.DateField()
     grade=models.IntegerField()
 
 class WorkInfoByOrganisation(models.Model):
-    class Meta:
-        unique_together = (('uid','org_code','role'),)
+    # class Meta:
+    #     unique_together = (('uid','org_code','role'),)
     uid=models.ForeignKey(Person,on_delete=models.CASCADE)
     org_code=models.ForeignKey(Organisation,on_delete=models.CASCADE)
-    role=models.CharField(max_length=20)
+    role=models.CharField(max_length=100)
     join_date=models.DateField()
     resign_date=models.DateField(null=True,blank=True)
 
 
 class WorkInfoByInstitution(models.Model):
-    class Meta:
-        unique_together = (('uid','inst_code','role'),)
+    # class Meta:
+    #     unique_together = (('uid','inst_code','role'),)
     uid=models.ForeignKey(Person,on_delete=models.CASCADE)
     inst_code=models.ForeignKey(Institution,on_delete=models.CASCADE)
-    role=models.CharField(max_length=20)
+    role=models.CharField(max_length=100)
     join_date=models.DateField()
     resign_date=models.DateField(null=True,blank=True)
 
 class UnorganisedWorkInfo(models.Model):
     uid=models.ForeignKey(Person,on_delete=models.CASCADE)
     seva_code=models.ForeignKey(SevaStore,on_delete=models.CASCADE)
-    work_name=models.CharField(max_length=20)
+    work_name=models.CharField(max_length=200)
 
 #-----------------------------------------------------------------------#
 class resources(models.Model):

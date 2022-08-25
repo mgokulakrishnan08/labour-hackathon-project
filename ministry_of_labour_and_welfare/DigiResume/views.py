@@ -14,7 +14,7 @@ from .utilities import *
 from .forms import *
 
 # Create your views here.
-sector =1
+
 
 #api 
 
@@ -104,14 +104,11 @@ def register(request,code):
                 obj.save()
                 #card gen
                 card=generateCard(uid)
-                #card.show()
+                card.show()
 
-                buffer = StringIO()
-                card.save(buffer, format='PNG')
-                op = base64.b64encode(buffer.getvalue())
                 #updating activity table
                 InstitutionActivity(uid=Person(uid = uid), inst_code = Institution(inst_code=code), action = f'User resistered {uid}').save()
-                return HttpResponse(f"""User resistered {uid}<br><a><img src="data:image/png;base64,{op}"/></a>""")
+                return HttpResponse(f"""User resistered {uid}<br><a><img src=""/></a>""")
     else:
         form = RegisterForm()
     return render(request,'DigiResume/register.html',{'form':form,'sector':sector,'code':code})
@@ -131,11 +128,23 @@ def add_course(request,code):
                 request.session['grade'] = form.cleaned_data['grade']
                 return redirect(f'/{code}/add_course/confirm')
     else:
-        form = AddCourseForm(code)  
+        form = AddCourseForm(code,)  
     return render(request,'DigiResume/add_course.html',{'code':code,'sector':sector,'form':form})
 
 
-
+def add_course_qr(request,code):
+    uid = qrDetector()
+    if request.method == 'POST':
+            form = AddCourseForm(code, request.POST)
+            if form.is_valid():
+                request.session['uid'] = form.cleaned_data['uid']
+                request.session['course_name'] = form.cleaned_data['course_name']
+                request.session['completion_date'] = str(form.cleaned_data['completion_date'])
+                request.session['grade'] = form.cleaned_data['grade']
+                return redirect(f'/{code}/add_course/confirm')
+    else:
+        form = AddCourseForm(code, initial = {'uid': uid})  
+    return render(request,'DigiResume/add_course.html',{'code':code,'sector':sector,'form':form})
 
 def confirmAddCourse(request,code):
     obj = EducationInfo()
@@ -152,11 +161,7 @@ def confirmAddCourse(request,code):
          inst_code = Institution(inst_code=code),
           action = f'{course_name} Course Added for {uid}').save()
         return HttpResponse(f'{course_name} Course Added for {uid}')
-
     return render(request,'DigiResume/confirm.html',{'x' : Person.objects.get(uid=uid)})
-
-
-
 
 
 
@@ -166,7 +171,7 @@ def add_work(request,code):
         if request.method == 'POST':
             form = AddWorkInstitutionForm(code, request.POST)
             if form.is_valid():
-               request.session[' uid'] = form.cleaned_data['uid']
+               request.session['uid'] = form.cleaned_data['uid']
                request.session['role'] = form.cleaned_data['role']
                request.session['join_date'] = str(form.cleaned_data['join_date'])
                return redirect(f'/{code}/add_work/confirm')
@@ -177,7 +182,7 @@ def add_work(request,code):
         if request.method == 'POST':
             form = AddWorkOrganisationForm(code, request.POST)
             if form.is_valid():
-               request.session[' uid'] = form.cleaned_data['uid']
+               request.session['uid'] = form.cleaned_data['uid']
                request.session['role'] = form.cleaned_data['role']
                request.session['join_date'] = str(form.cleaned_data['join_date'])
                return redirect(f'/{code}/add_work/confirm')
@@ -221,7 +226,7 @@ def confirmAddWork(request, code):
         role = request.session['role']
         obj = WorkInfoByOrganisation()
         obj.uid = Person(uid = uid)
-        obj.org_code = Organisation(inst_code = code)
+        obj.org_code = Organisation(org_code = code)
         obj.role = request.session['role']
         obj.join_date = request.session['join_date']
         obj.resign_date = None
@@ -251,7 +256,7 @@ def add_resign(request,code):
 
     else:
         o=''
-    return render(request,'DigiResume/add_resign.html',{'code':code,'o':o, 'sector':sector})
+    return render(request,'DigiResume/add_resign.html',{'code': code,'o':o, 'sector':sector})
 
 
 
@@ -299,3 +304,15 @@ def view_details(request,uid):
     a = WorkInfoByInstitution.objects.filter(uid=uid)
     uw = UnorganisedWorkInfo.objects.filter(uid = uid)
     return render(request,'DigiResume/view_details.html',{'x':x,'y':y,'z':z,'a':a, 'uw':uw})
+
+
+
+def trace(request):
+    #in particular yr
+    x = WorkInfoByOrganisation.objects.filter(join_date__gte='2024-12-31', join_date__lte='2026-01-01')
+   
+   #not employed
+   # x = WorkInfoByOrganisation.objects.exclude(resign_date = None )
+
+    #not employed so far
+    return render(request,'DigiResume/trace.html',{'x':x})
