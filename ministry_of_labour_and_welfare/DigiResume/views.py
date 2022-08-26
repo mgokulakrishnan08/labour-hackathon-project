@@ -135,15 +135,15 @@ def add_course(request,code):
 def add_course_qr(request,code):
     uid = qrDetector()
     if request.method == 'POST':
-            form = AddCourseForm(code, request.POST)
-            if form.is_valid():
-                request.session['uid'] = form.cleaned_data['uid']
-                request.session['course_name'] = form.cleaned_data['course_name']
-                request.session['completion_date'] = str(form.cleaned_data['completion_date'])
-                request.session['grade'] = form.cleaned_data['grade']
-                return redirect(f'/{code}/add_course/confirm')
+        form = AddCourseForm(code, request.POST)
+        if form.is_valid():
+            request.session['uid'] = form.cleaned_data['uid']
+            request.session['course_name'] = form.cleaned_data['course_name']
+            request.session['completion_date'] = str(form.cleaned_data['completion_date'])
+            request.session['grade'] = form.cleaned_data['grade']
+            return redirect(f'/{code}/add_course/confirm')
     else:
-        form = AddCourseForm(code, initial = {'uid': uid})  
+        form = AddCourseForm(code,initial = {"uid":uid})  
     return render(request,'DigiResume/add_course.html',{'code':code,'sector':sector,'form':form})
 
 def confirmAddCourse(request,code):
@@ -206,6 +206,10 @@ def add_work(request,code):
     return render(request,'DigiResume/add_work.html',{'code':code,'form':form, 'sector':sector})
 
 
+def add_work_qr(request,code):
+    uid = qrDetector()
+    add_work(request,code)
+
 
 def confirmAddWork(request, code):
     uid = request.session['uid']
@@ -258,7 +262,9 @@ def add_resign(request,code):
         o=''
     return render(request,'DigiResume/add_resign.html',{'code': code,'o':o, 'sector':sector})
 
-
+def add_resign_qr(request,code):
+    uid = qrDetector()
+    add_resign(request,code)
 
 def confirmAddResign(request, code):
     uid = request.session['uid']
