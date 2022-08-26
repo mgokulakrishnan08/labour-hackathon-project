@@ -10,9 +10,9 @@
   .table{
     width:50%;    
   }
-
- 
 </style>
+
+
 </head>
 <body>
 
@@ -44,6 +44,8 @@
 </header>
 <br><br>
 
+
+
 <div class="container">
   <div class="container">
     <div class="float-right img-thumbnail ">
@@ -51,7 +53,7 @@
       </div>
   </div>
 
-<div class="container">
+<div class="lang-tamil container">
   <h3>PERSONAL DETAILS:</h3>
 
 <table class="table">
@@ -65,7 +67,7 @@
     <td>{{x.aadhar}} </td>
   </tr>
   <tr>
-    <td>Dob: </td>
+    <td>Date Of Birth: </td>
     <td>{{x.dob}} </td>
   </tr>
   <tr>
@@ -175,6 +177,16 @@
 {% endif %}
 
 </div>
+<div id="google_translate_element"></div>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script>
+	function googleTranslateElementInit(){
+		new google.translate.TranslateElement(
+			{pageLanguage: 'en'},
+			'google_translate_element'
+		);
+	}
+</script>
 
 <br><br><br><br>
 

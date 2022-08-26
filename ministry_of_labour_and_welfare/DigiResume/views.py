@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.core.mail import send_mail
+from django.utils.translation import gettext as _
 from .serializers import *
 from .models import *
 from .utilities import *
