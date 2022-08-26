@@ -1,14 +1,9 @@
-from ast import Return
-import base64
-from email.message import Message
-from io import StringIO, BytesIO
+
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework import viewsets
-from collections import namedtuple
+from django.core.mail import send_mail
 from .serializers import *
 from .models import *
 from .utilities import *
@@ -157,7 +152,7 @@ def confirmAddCourse(request,code):
     obj = EducationInfo()
     uid = request.session['uid']
     obj.uid = Person(uid = uid)
-    obj.inst_code =  Institution(inst_code=code)
+    obj.inst_code = Institution(inst_code=code)
     course_name = request.session['course_name']
     obj.course_name = course_name
     obj.completion_date = request.session['completion_date']
