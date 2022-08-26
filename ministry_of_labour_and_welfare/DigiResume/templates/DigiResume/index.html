@@ -24,7 +24,11 @@
 	<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
 <!--===============================================================================================-->
 </head>
-
+{% if message %}
+<script>
+alert('{{ message }}');
+</script>
+{% endif %}
 <body>
 	
 	<div class="limiter">

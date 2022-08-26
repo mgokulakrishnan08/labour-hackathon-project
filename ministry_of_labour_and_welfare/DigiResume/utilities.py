@@ -45,6 +45,6 @@ def qrDetector():
         cv2.imshow('qrcodescanner app',img)
         if cv2.waitKey(1) == ord('q'):
             break
-    cap.release(a)
+    cap.release()
     cv2.destroyAllWindows()
     

@@ -11,7 +11,11 @@
     width:50%;    
   }
 </style>
-
+{% if message %}
+<script>
+alert('{{ message }}');
+</script>
+{% endif %}
 
 </head>
 <body>

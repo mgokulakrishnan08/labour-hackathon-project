@@ -1,4 +1,5 @@
 
+from email import message
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from rest_framework.views import APIView
@@ -37,9 +38,13 @@ class API(APIView):
 
 
 def index(request):
+    message = ''
     if request.GET:
-        uid=request.GET.dict()['id'].upper()
-        return redirect(f'/{uid}/view_details')
+        try:
+            uid=request.GET.dict()['id'].upper()
+            return redirect(f'/{uid}/view_details')
+        except:
+            message = 'user does not exit'
     return render(request,'DigiResume/index.html')
 
 def loginQR(request):
@@ -49,25 +54,29 @@ def loginQR(request):
 
 
 def login(request):
+    message = ''
     flag=True
     if request.GET:
         id=request.GET.dict()['id'].upper()
         password=request.GET.dict()['password']
         global sector
-        if 'EDU' in id:
-            sector=1
-            x=Institution.objects.get(inst_code=id).password
-        elif 'ORG' in id:
-            sector=2
-            x=Organisation.objects.get(org_code=id).password
-        elif 'SEV' in id:
-            sector=3
-            x=SevaStore.objects.get(seva_code=id).password
-        if password==x:
-            return redirect(f'/{id}/home/')
-        else:
-            flag=False
-    return render(request,'DigiResume/login.html',{'flag':flag})
+        try:
+            if 'EDU' in id:
+                sector=1
+                x=Institution.objects.get(inst_code=id).password
+            elif 'ORG' in id:
+                sector=2
+                x=Organisation.objects.get(org_code=id).password
+            elif 'SEV' in id:
+                sector=3
+                x=SevaStore.objects.get(seva_code=id).password
+            if password==x:
+                return redirect(f'/{id}/home/')
+            else:
+                flag=False
+        except:
+            message = 'user does not exist'
+    return render(request,'DigiResume/login.html',{'flag':flag, 'message' : message})
 
 
 
@@ -234,7 +243,7 @@ def add_work_qr(request,code):
                request.session['join_date'] = str(form.cleaned_data['join_date'])
                return redirect(f'/{code}/add_work/confirm')
         else:
-            form = AddWorkInstitutionForm(code, initial = {'uid': uid})
+            form = AddWorkInstitutionForm(code, initial={'uid':uid})
             
     elif sector==2:
         if request.method == 'POST':
@@ -246,7 +255,7 @@ def add_work_qr(request,code):
                return redirect(f'/{code}/add_work/confirm')
    
         else:
-            form = AddWorkOrganisationForm(code, initial = {'uid': uid})
+            form = AddWorkOrganisationForm(code, initial={'uid':uid})
 
     elif sector==3:
         if request.method == 'POST':
@@ -260,7 +269,7 @@ def add_work_qr(request,code):
                 obj.save()
                 return HttpResponse(f'{work} work Added for {uid}')
         else:
-            form = AddUnorganisedWorkForm(initial = {'uid': uid})            
+            form = AddUnorganisedWorkForm(initial={'uid':uid})            
     return render(request,'DigiResume/add_work.html',{'code':code,'form':form, 'sector':sector, 'message':message})
 
 
@@ -384,12 +393,17 @@ def activity(request,code):
 
 
 def view_details(request,uid):
-    x=Person.objects.get(uid=uid)
-    y=EducationInfo.objects.filter(uid=uid)
-    z=WorkInfoByOrganisation.objects.filter(uid=uid)
-    a = WorkInfoByInstitution.objects.filter(uid=uid)
-    uw = UnorganisedWorkInfo.objects.filter(uid = uid)
-    return render(request,'DigiResume/view_details.html',{'x':x,'y':y,'z':z,'a':a, 'uw':uw})
+    message =''
+    x,y,z,a,uw ='','','','',''
+    try:
+        x=Person.objects.get(uid=uid)
+        y=EducationInfo.objects.filter(uid=uid)
+        z=WorkInfoByOrganisation.objects.filter(uid=uid)
+        a = WorkInfoByInstitution.objects.filter(uid=uid)
+        uw = UnorganisedWorkInfo.objects.filter(uid = uid)
+    except:
+        message = 'person does not exist'
+    return render(request,'DigiResume/view_details.html',{'x':x,'y':y,'z':z,'a':a, 'uw':uw, 'message' : message})
 
 
 
