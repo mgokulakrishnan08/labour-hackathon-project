@@ -84,10 +84,7 @@ alert('{{ message }}');
   <form method="POST" class="form-inline">
     {% csrf_token %}
 
-    {% if resign %}
-    <label for="">Resign date</label>
-    <input type="text" name="resign_date">
-    {% endif %}
+  
 
   <div class="btn btn-block">
     <button class=" btn btn-primary" type="submit">

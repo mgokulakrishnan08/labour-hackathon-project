@@ -315,9 +315,6 @@ def add_resign(request,code):
         o=''
     return render(request,'DigiResume/add_resign.html',{'code': code,'o':o, 'sector':sector})
 
-def add_resign_qr(request,code):
-    uid = qrDetector()
-    add_resign(request,code)
 
 def add_resign_qr(request,code):
     uid =''
@@ -343,24 +340,31 @@ def add_resign_qr(request,code):
 
 
 def confirmAddResign(request, code):
+    message = ''
     uid = request.session['uid']
     if sector==1:
         if request.POST:
-            obj = WorkInfoByInstitution.objects.get(uid = uid, inst_code = code)
-            role = obj.role
-            obj.resign_date = request.session['resign_date']
-            obj.save()
-            InstitutionActivity(uid=Person(uid = Person(uid=uid)), inst_code = Institution(inst_code=code), action = f'{role} resign date Added for {uid}').save()
-            return HttpResponse(f'{role} resign date Added for {uid}')
+            try:
+                obj = WorkInfoByInstitution.objects.get(uid = uid, inst_code = code)
+                role = obj.role
+                obj.resign_date = request.session['resign_date']
+                obj.save()
+                InstitutionActivity(uid=Person(uid = Person(uid=uid)), inst_code = Institution(inst_code=code), action = f'{role} resign date Added for {uid}').save()
+                return HttpResponse(f'{role} resign date Added for {uid}')
+            except:
+                message ='no role enrolled'
     elif sector==2:
         if request.POST:
-            obj = WorkInfoByOrganisation.objects.get(uid = uid, org_code = code)
-            role = obj.role
-            obj.resign_date = request.session['resign_date']
-            obj.save()
-            OrganisationActivity(uid=Person(uid = Person(uid=uid)), org_code = Organisation(org_code=code), action = f'{role} resign date Added for {uid}').save()
-            return HttpResponse(f'{role} resign date Added for {uid}')
-    return render(request,'DigiResume/confirm.html',{'x' : Person.objects.get(uid=uid), 'resign' : True})
+            try:
+                obj = WorkInfoByOrganisation.objects.get(uid = uid, org_code = code)
+                role = obj.role
+                obj.resign_date = request.session['resign_date']
+                obj.save()
+                OrganisationActivity(uid=Person(uid = Person(uid=uid)), org_code = Organisation(org_code=code), action = f'{role} resign date Added for {uid}').save()
+                return HttpResponse(f'{role} resign date Added for {uid}')
+            except:
+                message ='no role enrolled'        
+    return render(request,'DigiResume/confirm.html',{'x' : Person.objects.get(uid=uid), 'message' : message})
 
 
 
