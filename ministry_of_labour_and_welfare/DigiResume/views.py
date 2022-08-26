@@ -11,7 +11,6 @@ from .forms import *
 
 # Create your views here.
 
-
 #api 
 
 
@@ -89,25 +88,28 @@ def home(request,code):
 
 def register(request,code):
     uid=generateUID()
+    message = None
     if uid in Person.objects.values_list('uid',flat=True):
         return register(request,code)
 
     if request.method == 'POST':
             form = RegisterForm(request.POST, request.FILES)
             if form.is_valid():
-                obj=form.save(commit=False)
-                obj.uid=uid
-                obj.save()
-                #card gen
-                card=generateCard(uid)
-                card.show()
-
+                try:
+                    obj=form.save(commit=False)
+                    obj.uid=uid
+                    obj.save()
+                    #card gen
+                    card=generateCard(uid)
+                    card.show()
+                except:
+                    message = 'card already generated'
                 #updating activity table
                 InstitutionActivity(uid=Person(uid = uid), inst_code = Institution(inst_code=code), action = f'User resistered {uid}').save()
                 return HttpResponse(f"""User resistered {uid}<br><a><img src=""/></a>""")
     else:
         form = RegisterForm()
-    return render(request,'DigiResume/register.html',{'form':form,'sector':sector,'code':code})
+    return render(request,'DigiResume/register.html',{'form':form,'sector':sector,'code':code, 'message' :message})
 
 
 
@@ -144,13 +146,8 @@ def add_course_qr(request,code):
             request.session['grade'] = form.cleaned_data['grade']
             return redirect(f'/{code}/add_course/confirm')
     else:
-<<<<<<< HEAD
-        form = AddCourseForm(code,initial = {"uid":uid})  
-    return render(request,'DigiResume/add_course.html',{'code':code,'sector':sector,'form':form})
-=======
         form = AddCourseForm(code, initial = {'uid': uid})  
     return render(request,'DigiResume/add_course.html',{'code':code,'sector':sector,'form':form, 'message':message})
->>>>>>> 1a29bb522feb39680ce0f82c122f19159cc0577c
 
 def confirmAddCourse(request,code):
     message = ''
@@ -216,9 +213,7 @@ def add_work(request,code):
     return render(request,'DigiResume/add_work.html',{'code':code,'form':form, 'sector':sector})
 
 
-def add_work_qr(request,code):
-    uid = qrDetector()
-    add_work(request,code)
+
 
 
 

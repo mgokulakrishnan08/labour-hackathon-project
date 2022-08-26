@@ -9,6 +9,14 @@
 <link rel="stylesheet" href="{% static 'css/layout.css' %}">
 <!-- <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}"> -->
 
+{% if message %}
+
+<script>
+
+alert('{{ message }}');
+
+</script>
+{% endif %}
 </head>
 <body>
 
@@ -51,8 +59,9 @@
   </div>
 </div>
 
+<br><br>
 
-<img src='data:image/png;base64", {{img_str}}"'  alt="">
+
 
    <footer>
    <small>&copy; Copyright 2022 Minstry Of Labour And Welfare.All Rights Reserved</small> 
