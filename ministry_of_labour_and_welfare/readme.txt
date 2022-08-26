@@ -17,9 +17,9 @@ Individuals portal : http://127.0.0.1:8000/
 Individual/Organisation Portal : http://127.0.0.1:8000/login/
 for API : http://127.0.0.1:8000/{uid}pp/api/                                      uid looks like DCRN652765287647
 Database Site Administration : http://127.0.0.1:8000/admin/
-    username and password for database site administration is admin
+    username and password for database site administration is 'admin'
 
-login credentials:
+login credentials for Individual/Organisation Portal:
 Edcational Institution:
 inst_code                       password
 EDU070698                       896070
