@@ -12,7 +12,12 @@ urlpatterns = [
 
 
     path('<str:code>/add_work/',add_work,name='add_work'),
+    path('<str:code>/add_workqr/',add_work_qr,name='add_work_qr'),
+
+
     path('<str:code>/add_resign/',add_resign,name='add_resign'),
+    path('<str:code>/add_resignqr/',add_resign_qr,name='add_resign_qr'),
+
     path('<str:code>/activity/',activity,name='activity'),
     path("<str:uid>/view_details/",view_details,name='view_details'),
     path("<str:code>/add_course/confirm", confirmAddCourse, name='confirmAddCourse'),

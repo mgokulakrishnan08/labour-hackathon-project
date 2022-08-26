@@ -8,6 +8,15 @@
 <link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
 <link rel="stylesheet" href="{% static 'css/layout.css' %}">
 
+{% if message %}
+
+<script>
+
+alert('{{ message }}');
+
+</script>
+{% endif %}
+
 </head>
 <body>
 
@@ -46,9 +55,16 @@
       {% csrf_token %}
 
       {{form | crispy}}
+      
+      <div class="btn btn-block">
+        (or)
+        <br> <br>
       <a class=" btn btn-primary" href = "{% url 'add_course_qr' code %}">
         scan QR
       </a>
+     
+      </div>    
+
       <div class="btn btn-block">
         <button class=" btn btn-primary" type="submit">
           Register
