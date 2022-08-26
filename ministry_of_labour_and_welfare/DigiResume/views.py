@@ -1,5 +1,6 @@
 
 from email import message
+from logging import exception
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from rest_framework.views import APIView
@@ -313,7 +314,7 @@ def add_resign(request,code):
     if request.GET:
         request.session['uid'] = request.GET.dict()['uid']
         if sector==1:
-            request.session['resign_date'] =str(request.GET.dict()['resign_date'])
+            request.session['resign_date'] = str(request.GET.dict()['resign_date'])
             return redirect(f'/{code}/add_resign/confirm')
 
         elif sector==2:
@@ -349,12 +350,12 @@ def add_resign_qr(request,code):
 
 
 def confirmAddResign(request, code):
-    message = ''
     uid = request.session['uid']
+    message = ''
     if sector==1:
         if request.POST:
             try:
-                obj = WorkInfoByInstitution.objects.get(uid = uid, inst_code = code)
+                obj = WorkInfoByInstitution.objects.get(uid=uid, inst_code=code)
                 role = obj.role
                 obj.resign_date = request.session['resign_date']
                 obj.save()
@@ -365,7 +366,7 @@ def confirmAddResign(request, code):
     elif sector==2:
         if request.POST:
             try:
-                obj = WorkInfoByOrganisation.objects.get(uid = uid, org_code = code)
+                obj = WorkInfoByOrganisation.objects.get(uid=uid, org_code=code)
                 role = obj.role
                 obj.resign_date = request.session['resign_date']
                 obj.save()

@@ -12,6 +12,8 @@ Required Python Pakages:
 -> django-rest-framework
 -> pillow
 
+Date format must be 'yyyy-mm-dd'
+
 to execute, use this line in shell : python manage.py runserver
 
 Two portals:
