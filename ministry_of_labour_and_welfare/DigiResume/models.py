@@ -9,7 +9,7 @@ from django.db import models
 class Person(models.Model):
     uid=models.CharField(max_length=16,primary_key=True)
     name=models.CharField(max_length=50)
-    aadhar=models.IntegerField(unique = True)
+    aadhar=models.IntegerField()
     photo=models.ImageField(upload_to='person/')
     dob=models.DateField()
     gender=models.CharField(max_length=6)
