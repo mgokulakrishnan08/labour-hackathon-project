@@ -113,10 +113,10 @@ def register(request,code):
                     #card gen
                     card=generateCard(uid)
                     card.show()
+                    InstitutionActivity(uid=Person(uid = uid), inst_code = Institution(inst_code=code), action = f'User resistered {uid}').save()
                 except:
                     message = 'card already generated'
                 #updating activity table
-                InstitutionActivity(uid=Person(uid = uid), inst_code = Institution(inst_code=code), action = f'User resistered {uid}').save()
                 return HttpResponse(f"""User resistered {uid}<br><a><img src=""/></a>""")
     else:
         form = RegisterForm()

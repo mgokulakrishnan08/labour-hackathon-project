@@ -56,7 +56,7 @@ alert('{{ message }}');
     <form method="POST"  action="{% url 'add_course' code %}" enctype="multipart/form-data"> 
 
       <br><br>
-      <a class=" btn btn-primary " href = "{% url 'add_resign_qr' code %}">
+      <a class=" btn btn-primary " href = "{% url 'add_course_qr' code %}">
         scan QR to fill uid
       </a>
       <br><br>
@@ -65,7 +65,7 @@ alert('{{ message }}');
 
       {{form | crispy}}
       
- 
+      <div>
      
       </div>    
 
