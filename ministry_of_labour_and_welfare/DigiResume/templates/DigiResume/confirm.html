@@ -2,7 +2,7 @@
 <!doctype html>
 <html>
 <head>
-<title></title>
+<title>Confirmation of Details</title>
 
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
@@ -26,26 +26,28 @@ alert('{{ message }}');
         <img src="{% static 'image/national-career-service.png' %}" alt="" class="float-right header-img">
     </div>
     <nav class="navbar navbar-expand-lg navigation float-bottom">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <a class="nav-item nav-link" href=""></a>
+
+        <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav ">
-            <a class="nav-item nav-link" href="/{{code}}/home">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link active" href="/{{code}}/home">Home <span class="sr-only">(current)</span></a>
             {% if sector is 1 %}
             <a class="nav-item nav-link" href="/{{code}}/register">Register</a>
-            <a class="nav-item nav-link active" href="/{{code}}/add_course">Add course</a>
+            <a class="nav-item nav-link" href="/{{code}}/add_course">Add course</a>
             {% endif %}
             <a class="nav-item nav-link" href="/{{code}}/add_work">Add Work</a>
             <a class="nav-item nav-link" href="/{{code}}/add_resign">Add Resign</a>
             <a class="nav-item nav-link" href="/{{code}}/activity">Activity</a>
           </div>
-        </div>
+        </div> -->
       </nav>
 </header>
 
 
-
+<br><br>
 
   <div class="container">
 
@@ -56,7 +58,7 @@ alert('{{ message }}');
           </div>
       </div>
 
-    <h3>DETAILS:</h3>
+    <h3>CONFIRMATION DETAILS:</h3>
   
   <table class="table">
     <tr>

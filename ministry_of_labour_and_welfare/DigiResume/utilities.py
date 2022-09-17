@@ -42,9 +42,11 @@ def qrDetector():
         data, one, _ = detector.detectAndDecode(img)
         if data:
             return data
+            exit()
         cv2.imshow('qrcodescanner app',img)
         if cv2.waitKey(1) == ord('q'):
             break
     cap.release()
     cv2.destroyAllWindows()
+
     

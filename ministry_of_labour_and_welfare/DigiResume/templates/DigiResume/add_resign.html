@@ -2,7 +2,7 @@
 <!doctype html>
 <html>
 <head>
-<title></title>
+<title>Add Resign</title>
 
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
@@ -43,6 +43,7 @@ alert('{{ message }}');
             <a class="nav-item nav-link" href="/{{code}}/activity">Activity</a>
           </div>
         </div>
+        <a class="btn btn-info float-right"  href="/login">Log Out</a>
       </nav>
 </header>
 
@@ -61,6 +62,12 @@ alert('{{ message }}');
 
 <form>
 
+  <br><br>
+  <a class=" btn btn-primary " href = "{% url 'add_resign_qr' code %}">
+    scan QR to fill uid
+  </a>
+  <br><br>
+
   <div class="form-group">
     <label for="resign_date">Resign Date</label>
     <input type="text" class="form-control" id="resign_date" name="resign_date">
@@ -71,17 +78,11 @@ alert('{{ message }}');
     <input type="text" class="form-control" id="uid" name="uid" value="{{uid}}">
   </div>
 
-  <div class="btn btn-block">
-    (or)
-    <br> <br>
 
-  <a class=" btn btn-primary" href = "{% url 'add_resign_qr' code %}">
-    scan QR
-  </a>
 
   <div class="btn btn-block">
     <button class=" btn btn-primary" type="submit">
-      Register
+      submit
     </button>
   </div>
 </form>

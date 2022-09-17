@@ -2,7 +2,7 @@
 <!doctype html>
 <html>
 <head>
-<title></title>
+<title>Add Course</title>
 
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
@@ -42,6 +42,8 @@ alert('{{ message }}');
             <a class="nav-item nav-link" href="/{{code}}/activity">Activity</a>
           </div>
         </div>
+        <a class="btn btn-info float-right"  href="/login">Log Out</a>
+
       </nav>
 </header>
 
@@ -52,22 +54,24 @@ alert('{{ message }}');
   <div class="row justify-content-center">
 
     <form method="POST"  action="{% url 'add_course' code %}" enctype="multipart/form-data"> 
+
+      <br><br>
+      <a class=" btn btn-primary " href = "{% url 'add_resign_qr' code %}">
+        scan QR to fill uid
+      </a>
+      <br><br>
+
       {% csrf_token %}
 
       {{form | crispy}}
       
-      <div class="btn btn-block">
-        (or)
-        <br> <br>
-      <a class=" btn btn-primary" href = "{% url 'add_course_qr' code %}">
-        scan QR
-      </a>
+ 
      
       </div>    
 
       <div class="btn btn-block">
         <button class=" btn btn-primary" type="submit">
-          Register
+          submit
         </button>
       </div>    
     </form>
