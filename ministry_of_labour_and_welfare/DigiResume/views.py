@@ -231,10 +231,11 @@ def add_work(request,code):
 def add_work_qr(request,code):
     uid =''
     message = None
-    try:
-        uid = qrDetector()
-    except:
-        message ='cam not found'    
+    if request.method != 'POST':
+        try:
+            uid = qrDetector()
+        except:
+            message ='cam not found'    
     if sector==1:    
         if request.method == 'POST':
             form = AddWorkInstitutionForm(code, request.POST)
@@ -329,10 +330,11 @@ def add_resign(request,code):
 def add_resign_qr(request,code):
     uid =''
     message = None
-    try:
-        uid = qrDetector()
-    except:
-        message ='cam not found'
+    if not request.GET:
+        try:
+            uid = qrDetector()
+        except:
+            message ='cam not found'
     if request.GET:
         request.session['uid'] = request.GET.dict()['uid']
         if sector==1:
